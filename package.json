@@ -1,0 +1,24 @@
+{
+  "name": "erin",
+  "version": "1.0.0",
+  "description": "Discord bot",
+  "main": "dist/src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://lab.shelter.moe/axelterizaki/erin.git"
+  },
+  "author": "Axel Terizaki <axel@teri-chan.net>",
+  "license": "MIT",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.19.0",
+    "@typescript-eslint/parser": "^4.19.0",
+    "eslint": "^7.22.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-security": "^1.4.0",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.3"
+  }
+}
