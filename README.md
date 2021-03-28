@@ -2,6 +2,20 @@
 
 [Innkeeper] discord bot
 
+The bot is currently a Level 1 bot.
+
+## Features (skills)
+
+These are planned features, for now none are implemented (see issues)
+
+- [Skill: Random welcome / leave messages] Custom and random welcome / leave messages for your users
+- [Skill: User leaderboards] User XP/Level leaderboards
+- [Skill: Self-assignable roles]
+
+Later :
+
+- [Skill: User polls]
+
 ## How to use
 
 ```sh
