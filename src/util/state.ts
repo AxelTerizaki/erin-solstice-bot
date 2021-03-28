@@ -1,4 +1,5 @@
 import merge from 'lodash.merge';
+
 import { State } from '../types/state';
 
 let state: State;
