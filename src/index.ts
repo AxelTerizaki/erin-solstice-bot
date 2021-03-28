@@ -1,8 +1,10 @@
 import {resolve} from 'path';
 
-import { initErin } from './bot';
+import { connectBot } from './bot';
 import { initPing } from './modules/ping';
-import { setState } from './util/state';
+import { readConfig } from './util/config';
+import logger, { configureLogger } from './util/logger';
+import { getState, setState } from './util/state';
 
 setState({
 	appPath: process.cwd(),
@@ -10,7 +12,13 @@ setState({
 });
 
 async function main() {
-	initErin();
+	// Setting debug logging to true while we're developing.
+	await configureLogger(getState().dataPath, true);
+	logger.info('Initializing...', {service: 'Erin'});
+	await readConfig();
+
+	// Bot code starts here.
+	connectBot();
 	initPing();
 }
 

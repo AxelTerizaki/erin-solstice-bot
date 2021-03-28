@@ -1,6 +1,7 @@
 import discord, { Client } from 'discord.js';
 
-import { getConfig, readConfig } from './util/config';
+import { getConfig } from './util/config';
+import logger from './util/logger';
 
 let client: Client;
 
@@ -8,10 +9,15 @@ export function getErin() {
 	return client;
 }
 
-export function initErin() {
-	readConfig();
+export function connectBot() {
 	const config = getConfig();
-	client = new discord.Client();
-	client.login(config.token);
-	console.log('Erin is ready.');
+	try {
+		logger.info('Logging in...', {service: 'Discord'});
+		client = new discord.Client();
+		client.login(config.token);
+		logger.info('Logged in Erin!', {service: 'Discord'});
+	} catch(err) {
+		logger.error('Failed to login', {service: 'Discord', obj: err});
+		throw err;
+	}
 }

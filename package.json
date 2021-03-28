@@ -4,8 +4,8 @@
   "description": "Discord bot",
   "main": "dist/src/index.js",
   "scripts": {
-	"start": "ts-node src/index.ts",
-	"build": "npx rimraf \"dist\" && tsc --build",
+    "start": "ts-node src/index.ts",
+    "build": "npx rimraf \"dist\" && tsc --build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,8 +15,10 @@
   "author": "Axel Terizaki <axel@teri-chan.net>",
   "license": "MIT",
   "devDependencies": {
+    "@types/fs-extra": "^9.0.9",
     "@types/lodash.merge": "^4.6.6",
     "@types/node": "^14.14.36",
+    "@types/winston": "^2.4.4",
     "@typescript-eslint/eslint-plugin": "^4.19.0",
     "@typescript-eslint/parser": "^4.19.0",
     "eslint": "^7.22.0",
@@ -28,6 +30,9 @@
   },
   "dependencies": {
     "discord.js": "^12.5.1",
-    "lodash.merge": "^4.6.2"
+    "fs-extra": "^9.1.0",
+    "lodash.merge": "^4.6.2",
+    "winston": "^3.3.3",
+    "winston-daily-rotate-file": "^4.5.1"
   }
 }
