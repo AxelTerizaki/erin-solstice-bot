@@ -9,9 +9,10 @@ let config: Config;
 
 export async function readConfig() {
 	try {
-		const configData = asyncReadFile(resolve(getState().dataPath, 'config.json'), 'utf-8');
+		const configData = await asyncReadFile(resolve(getState().dataPath, 'config.json'), 'utf-8');
 		config = JSON.parse(configData);
-		logger.info('Parsed configuration', {service: 'Config', obj: config});
+		logger.info('Configuration loaded', {service: 'Config'});
+		//logger.debug('Parsed configuration', {service: 'Config', obj: config});
 	} catch(err) {
 		logger.error('Unable to read config', {service: 'Config', obj: err});
 		throw err;
