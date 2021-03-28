@@ -15,7 +15,7 @@ export function connectBot() {
 		logger.info('Logging in...', {service: 'Discord'});
 		client = new discord.Client();
 		client.login(config.token);
-		logger.info('Logged in Erin!', {service: 'Discord'});
+		logger.info('Erin is logged in!', {service: 'Discord'});
 	} catch(err) {
 		logger.error('Failed to login', {service: 'Discord', obj: err});
 		throw err;
