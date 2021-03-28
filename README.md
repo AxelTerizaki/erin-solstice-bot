@@ -12,8 +12,8 @@ Create a `data/config.json` file with the following JSON structure :
 
 ```JSON
 {
-    "token": "bot token here",
-	"prefix": "!"
+  "token": "bot token here",
+  "prefix": "!"
 }
 ```
 
