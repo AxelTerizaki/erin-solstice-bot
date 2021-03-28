@@ -1,5 +1,6 @@
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
+
 import { Config } from '../types/config';
 import { getState } from './state';
 

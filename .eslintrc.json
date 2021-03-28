@@ -7,7 +7,9 @@
 		"node": true
     },
     "plugins": [
-		"@typescript-eslint"
+		"@typescript-eslint",
+		"security",
+		"simple-import-sort"
 	],
 	"extends": [
 		"eslint:recommended",

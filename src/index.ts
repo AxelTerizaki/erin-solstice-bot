@@ -1,7 +1,8 @@
-import { setState } from './util/state';
 import {resolve} from 'path';
+
 import { initErin } from './bot';
 import { initPing } from './modules/ping';
+import { setState } from './util/state';
 
 setState({
 	appPath: process.cwd(),

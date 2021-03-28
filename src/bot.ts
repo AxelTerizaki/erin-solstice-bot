@@ -1,4 +1,5 @@
 import discord, { Client } from 'discord.js';
+
 import { getConfig, readConfig } from './util/config';
 
 let client: Client;
