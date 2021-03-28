@@ -1,6 +1,6 @@
-# Nanami Discord Bot
+# Erin Discord Bot
 
-Bot discord pour le *** de la Nanami
+[Innkeeper] discord bot
 
 ## How to use
 
