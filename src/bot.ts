@@ -36,6 +36,7 @@ function registerEvents() {
 		logger.error('Unknown error occured: ', {service: 'Discord', obj: err});
 	});
 }
+
 function registerCommands() {
 	client.registry
 		.registerDefaultTypes()
@@ -46,5 +47,8 @@ function registerCommands() {
 		.registerDefaultCommands({
 			ping: false // Disabling it since we're making our own
 		})
-		.registerCommandsIn(join(__dirname, 'modules'));
+		.registerCommandsIn({
+			dirname: join(__dirname, 'modules'),
+			filter: /\.(ts|js)$/
+		});
 }
