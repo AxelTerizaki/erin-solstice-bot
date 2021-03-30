@@ -1,7 +1,6 @@
 import {resolve} from 'path';
 
 import { connectBot } from './bot';
-import { initPing } from './modules/ping';
 import { readConfig } from './util/config';
 import logger, { configureLogger } from './util/logger';
 import { getState, setState } from './util/state';
@@ -19,7 +18,6 @@ async function main() {
 
 	// Bot code starts here.
 	connectBot();
-	initPing();
 }
 
 main().catch(err => {
