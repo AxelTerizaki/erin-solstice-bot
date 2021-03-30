@@ -1,5 +1,13 @@
 import { getErin } from '../bot';
+import { registerCommand } from '../util/http';
 import logger from '../util/logger';
+
+export async function registerPing() {
+	await registerCommand({
+		name: 'ping',
+		description: 'Say Hello to Erin!'
+	});
+}
 
 export async function initPing() {
 	const erin = getErin();
