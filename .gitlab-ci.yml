@@ -20,5 +20,6 @@ deploy:
     NODE_ENV: production
   environment:
     name: production
-  only:
-  - master
+  rule:
+#    - if: '$CI_COMMIT_REF_NAME == "master"'
+    - when: manual
