@@ -30,7 +30,8 @@
 		"listEmittedFiles": false,
 		"noUnusedParameters": true,
 		"noUnusedLocals": true,
-		"experimentalDecorators": true
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
 	},
 	"include": [
 		"src"

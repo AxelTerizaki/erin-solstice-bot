@@ -10,7 +10,7 @@ export function getErin() {
 	return client;
 }
 
-export function connectBot() {
+export async function connectBot(): Promise<void> {
 	const config = getConfig();
 	try {
 		logger.info('Logging in...', {service: 'Discord'});
@@ -21,6 +21,14 @@ export function connectBot() {
 		client.login(config.token);
 		registerEvents();
 		registerCommands();
+		return new Promise((resolve) => {
+			client.on('ready', () => {
+				logger.info(`Erin is logged in as ${client.user.tag}`, {service: 'Discord'});
+				client.user.setActivity('Hello, I\'m Erin!');
+				resolve();
+			});
+			// FIXME : find how to reject if connection fails
+		});
 	} catch(err) {
 		logger.error('Failed to login', {service: 'Discord', obj: err});
 		throw err;
@@ -28,10 +36,6 @@ export function connectBot() {
 }
 
 function registerEvents() {
-	client.on('ready', () => {
-		logger.info(`Erin is logged in as ${client.user.tag} !`, {service: 'Discord'});
-		client.user.setActivity('Hello, I\'m Erin!');
-	});
 	client.on('error', (err) => {
 		logger.error('Unknown error occured: ', {service: 'Discord', obj: err});
 	});

@@ -33,6 +33,9 @@
     "discord.js-commando": "^0.12.3",
     "fs-extra": "^9.1.0",
     "lodash.merge": "^4.6.2",
+    "reflect-metadata": "^0.1.13",
+    "sqlite3": "^5.0.2",
+    "typeorm": "^0.2.32",
     "winston": "^3.3.3",
     "winston-daily-rotate-file": "^4.5.1"
   }

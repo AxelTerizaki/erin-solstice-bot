@@ -1,7 +1,8 @@
 import {resolve} from 'path';
 
-import { connectBot } from './bot';
+import { connectBot, getErin } from './bot';
 import { readConfig } from './util/config';
+import Database, { getDB } from './util/db';
 import logger, { configureLogger } from './util/logger';
 import { getState, setState } from './util/state';
 
@@ -17,7 +18,12 @@ async function main() {
 	await readConfig();
 
 	// Bot code starts here.
-	connectBot();
+	await connectBot();
+	for (const guild of getErin().guilds.cache.values()) {
+		logger.info(`Serves ${guild.name}`, {service: 'Guilds'});
+		const guildDB = new Database(guild.id);
+		await guildDB.init();
+	}
 }
 
 main().catch(err => {
