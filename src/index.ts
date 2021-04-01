@@ -2,7 +2,8 @@ import {resolve} from 'path';
 
 import { connectBot, getErin } from './bot';
 import { readConfig } from './util/config';
-import Database, { getDB } from './util/db';
+import Database from './util/db';
+import { asyncCheckOrMkdir } from './util/files';
 import logger, { configureLogger } from './util/logger';
 import { getState, setState } from './util/state';
 
@@ -12,6 +13,10 @@ setState({
 });
 
 async function main() {
+	// Make sure folders exist
+	await asyncCheckOrMkdir(resolve(getState().dataPath, 'db/'));
+	await asyncCheckOrMkdir(resolve(getState().dataPath, 'logs/'));
+
 	// Setting debug logging to true while we're developing.
 	await configureLogger(getState().dataPath, true);
 	logger.info('Initializing...', {service: 'Erin'});
