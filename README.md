@@ -27,7 +27,8 @@ Create a `data/config.json` file with the following JSON structure :
 ```JSON
 {
   "token": "bot token here",
-  "prefix": "!"
+  "prefix": "!",
+  "ownerID": "your discord ID"
 }
 ```
 
