@@ -1,6 +1,7 @@
 import {resolve} from 'path';
 import { Connection, ConnectionOptions, createConnection } from 'typeorm';
 
+import Setting from '../entities/settings';
 import { getState } from './state';
 
 export const dbs = {};
@@ -15,7 +16,9 @@ export default class Database {
 		this.options = {
 			type: 'sqlite',
 			database: resolve(getState().dataPath, `db/${guildID}.sqlite`),
-			logging: true
+			logging: true,
+			entities: [Setting],
+			synchronize: true
 		};
 		this.guildID = guildID;
 	}

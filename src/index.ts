@@ -1,6 +1,7 @@
 import {resolve} from 'path';
 
 import { connectBot, getErin } from './bot';
+import Setting from './entities/settings';
 import { readConfig } from './util/config';
 import Database from './util/db';
 import { asyncCheckOrMkdir } from './util/files';
@@ -28,7 +29,16 @@ async function main() {
 		logger.info(`Serves ${guild.name}`, {service: 'Guilds'});
 		const guildDB = new Database(guild.id);
 		await guildDB.init();
+		// Sample code to insert data, delete later
+		/*
+		const manager = guildDB.connection.manager;
+		await manager.insert(Setting, {
+			setting: 'Test',
+			value: 'lol'
+		});
+		*/
 	}
+
 }
 
 main().catch(err => {
