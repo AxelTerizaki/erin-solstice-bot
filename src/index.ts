@@ -1,7 +1,7 @@
 import {resolve} from 'path';
 
 import { connectBot, getErin } from './bot';
-import Setting from './entities/settings';
+//import Setting from './entities/settings';
 import { readConfig } from './util/config';
 import Database from './util/db';
 import { asyncCheckOrMkdir } from './util/files';
