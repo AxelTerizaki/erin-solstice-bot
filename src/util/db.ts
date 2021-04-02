@@ -8,7 +8,7 @@ export const dbs = {};
 
 export function getDB(guildID: string) {
 	// the guild ID is a number, but the property is a string
-	return dbs[`${guildID}`];
+	return dbs[guildID];
 }
 
 export default class Database {
