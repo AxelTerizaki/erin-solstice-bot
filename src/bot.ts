@@ -1,5 +1,6 @@
 import discord, { Client } from 'discord.js-commando';
-import {join} from 'path';
+import { join } from 'path';
+import fs from 'fs';
 
 import { getConfig } from './util/config';
 import logger from './util/logger';
@@ -13,7 +14,7 @@ export function getErin() {
 export async function connectBot(): Promise<void> {
 	const config = getConfig();
 	try {
-		logger.info('Logging in...', {service: 'Discord'});
+		logger.info('Logging in...', { service: 'Discord' });
 		client = new discord.Client({
 			commandPrefix: config.prefix,
 			owner: config.ownerID
@@ -23,36 +24,52 @@ export async function connectBot(): Promise<void> {
 		registerCommands();
 		return new Promise((resolve) => {
 			client.on('ready', () => {
-				logger.info(`Erin is logged in as ${client.user.tag}`, {service: 'Discord'});
+				logger.info(`Erin is logged in as ${client.user.tag}`, { service: 'Discord' });
 				client.user.setActivity('Hello, I\'m Erin!');
 				resolve();
 			});
 			// FIXME : find how to reject if connection fails
 		});
-	} catch(err) {
-		logger.error('Failed to login', {service: 'Discord', obj: err});
+	} catch (err) {
+		logger.error('Failed to login', { service: 'Discord', obj: err });
 		throw err;
 	}
 }
 
 function registerEvents() {
 	client.on('error', (err) => {
-		logger.error('Unknown error occured: ', {service: 'Discord', obj: err});
+		logger.error('Unknown error occured: ', { service: 'Discord', obj: err });
 	});
 }
 
 function registerCommands() {
+	const groupsToRegister = [
+		['erin', 'Erin test commands']
+	];
 	client.registry
 		.registerDefaultTypes()
-		.registerGroups([
-			['erin', 'Erin test commands']
-		])
+		.registerGroups(groupsToRegister)
 		.registerDefaultGroups()
 		.registerDefaultCommands({
 			ping: false // Disabling it since we're making our own
-		})
-		.registerCommandsIn({
-			dirname: join(__dirname, 'modules'),
-			filter: /\.(ts|js)$/
 		});
+	groupsToRegister.forEach((actualGroup) => {
+		const groupName = actualGroup[0];
+		const modulesDir = join(__dirname, 'modules', groupName);
+		fs.readdir(modulesDir, (err, files) => {
+			if (!err) {
+				files.forEach(file => {
+					try {
+						client.registry.registerCommand(require(join(modulesDir, file)));
+					} catch(e) {
+						logger.error(`Unable to register command from file "${file}" : ${e}`);
+					}
+				});
+			} else {
+				logger.error(`Unable to register command from directory "${modulesDir}" : ${err}`);
+			}
+		});
+	});
+
+
 }
