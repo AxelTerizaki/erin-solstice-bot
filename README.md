@@ -4,6 +4,8 @@
 
 The bot is currently a Level 1 bot.
 
+Discussing dev happens on the [Nanami Discord here](http://nanami.fr/discord)
+
 ## Features (skills)
 
 These are planned features, for now none are implemented (see issues)
@@ -15,6 +17,9 @@ These are planned features, for now none are implemented (see issues)
 Later :
 
 - [Skill: User polls]
+- [Chessmaster] class 
+- [Skill: Currency management]
+- [Skill: Rec Room] with different activities
 
 ## How to use
 
