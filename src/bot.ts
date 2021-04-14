@@ -51,7 +51,8 @@ function registerCommands() {
 		.registerGroups(groupsToRegister)
 		.registerDefaultGroups()
 		.registerDefaultCommands({
-			ping: false // Disabling it since we're making our own
+			ping: false, // Disabling it since we're making our own
+			unknownCommand: false, // Disabling unknown commands response
 		});
 	groupsToRegister.forEach((actualGroup) => {
 		const groupName = actualGroup[0];
