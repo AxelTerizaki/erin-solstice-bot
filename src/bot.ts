@@ -1,6 +1,6 @@
 import discord, { Client } from 'discord.js-commando';
-import { join } from 'path';
 import fs from 'fs';
+import { join } from 'path';
 
 import { getConfig } from './util/config';
 import logger from './util/logger';
@@ -44,7 +44,8 @@ function registerEvents() {
 
 function registerCommands() {
 	const groupsToRegister = [
-		['erin', 'Erin test commands']
+		['erin', 'Erin test commands'],
+		['autoassignroles', 'Auto-assignable Roles']
 	];
 	client.registry
 		.registerDefaultTypes()

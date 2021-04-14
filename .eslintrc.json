@@ -61,7 +61,8 @@
 		"security/detect-object-injection": 0,
 		"security/detect-non-literal-fs-filename": 0,
 		"security/detect-non-literal-regexp": 0,
-		"security/detect-possible-timing-attacks": 0
+		"security/detect-possible-timing-attacks": 0,
+		"security/detect-non-literal-require": 0
     },
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
