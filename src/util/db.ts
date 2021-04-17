@@ -3,6 +3,7 @@ import { Connection, ConnectionOptions, createConnection } from 'typeorm';
 
 import Role from '../entities/roles';
 import Setting from '../entities/settings';
+import User from '../entities/users';
 import { getState } from './state';
 
 export const dbs = {};
@@ -18,7 +19,7 @@ export default class Database {
 			type: 'sqlite',
 			database: resolve(getState().dataPath, `db/${guildID}.sqlite`),
 			logging: true,
-			entities: [Setting, Role],
+			entities: [Setting, Role, User],
 			synchronize: true
 		};
 		this.guildID = guildID;
