@@ -45,7 +45,8 @@ function registerEvents() {
 function registerCommands() {
 	const groupsToRegister = [
 		['erin', 'Erin test commands'],
-		['autoassignroles', 'Auto-assignable Roles']
+		['autoassignroles', 'Auto-assignable Roles'],
+		['game', 'Money and core game commands']
 	];
 	client.registry
 		.registerDefaultTypes()
