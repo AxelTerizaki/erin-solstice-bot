@@ -23,7 +23,6 @@ export default class DailyCommand extends Command {
 	}
 
 	run(message: CommandoMessage, args: any) {
-		console.log(args);
 		return daily(message, args.type);
 	}
 }
