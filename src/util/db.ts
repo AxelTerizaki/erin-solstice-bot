@@ -1,6 +1,8 @@
 import {resolve} from 'path';
 import { Connection, ConnectionOptions, createConnection } from 'typeorm';
 
+import Daily from '../entities/dailies';
+import DailyUser from '../entities/dailyusers';
 import Role from '../entities/roles';
 import Setting from '../entities/settings';
 import User from '../entities/users';
@@ -19,7 +21,7 @@ export default class Database {
 			type: 'sqlite',
 			database: resolve(getState().dataPath, `db/${guildID}.sqlite`),
 			logging: true,
-			entities: [Setting, Role, User],
+			entities: [Setting, Role, User, Daily, DailyUser],
 			synchronize: true
 		};
 		this.guildID = guildID;

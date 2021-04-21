@@ -10,6 +10,10 @@ export function getUserManager(guildId: string): UserManagerService {
 	return managers[guildId];
 }
 
+export async function getCurrentUser(guildId: string, memberId: string): Promise<User> {
+	return getUserManager(guildId).getUser(memberId);
+}
+
 export default class UserManagerService {
 	constructor(guildID: string) {
 		this.guildId = guildID;
