@@ -1,7 +1,5 @@
-export function date(iso?: boolean, d?: Date): string {
-	if(!d) {
-		d = new Date();
-	}
+export function date(iso?: boolean): string {
+	const d = new Date();
 	const day = d.getDate();
 	const month = d.getMonth() + 1;
 	const year = d.getFullYear();
@@ -11,10 +9,8 @@ export function date(iso?: boolean, d?: Date): string {
 	return iso? `${year}-${monthStr}-${dayStr}` : `${dayStr}-${monthStr}-${year}`;
 }
 
-export function time(date?: Date): string {
-	if(!date) {
-		date = new Date();
-	}
+export function time(): string {
+	const date = new Date();
 	const hour = date.getHours();
 	const hourStr = (hour < 10 ? '0' : '') + hour;
 	const min  = date.getMinutes();
@@ -22,9 +18,4 @@ export function time(date?: Date): string {
 	const sec  = date.getSeconds();
 	const secStr = (sec < 10 ? '0' : '') + sec;
 	return `${hourStr}:${minStr}:${secStr}`;
-}
-
-export function generateFlatDate(): Date {
-	const d = date(true);
-	return new Date(`${d}T00:00:00Z`);
 }
