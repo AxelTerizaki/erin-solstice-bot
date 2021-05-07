@@ -16,6 +16,7 @@ export function getDB(guildID: string): Database {
 export default class Database {
 	constructor(guildID: string) {
 		this.options = {
+			name: guildID,
 			type: 'sqlite',
 			database: resolve(getState().dataPath, `db/${guildID}.sqlite`),
 			logging: true,
