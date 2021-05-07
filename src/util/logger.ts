@@ -1,10 +1,11 @@
+import {promises as fs} from 'fs';
 import { Format } from 'logform';
 import {resolve} from 'path';
 import logger from 'winston';
 import dailyRotateFile from  'winston-daily-rotate-file';
 
 import {date, time} from './date';
-import {asyncCheckOrMkdir, asyncReadFile} from './files';
+import {asyncCheckOrMkdir} from './files';
 import { getState } from './state';
 
 export default logger;
@@ -25,7 +26,7 @@ function errFormater() {
 }
 
 export async function readLog(level = 'debug'): Promise<any[]> {
-	const log = await asyncReadFile(resolve(getState().dataPath, `logs/erin-${date(true)}.log`), 'utf-8');
+	const log = await fs.readFile(resolve(getState().dataPath, `logs/erin-${date(true)}.log`), 'utf-8');
 	const levels = getLogLevels(level);
 	return log.split('\n')
 		.filter(value => value) // remove empty lines
