@@ -39,10 +39,11 @@ export async function add(message: Message, roleName: string) {
 		} catch (e) {
 			message.reply('There was some errors while adding you that role');
 			logger.error(`Error while adding role to member : ${e}`);
-		} finally {
-			message.channel.stopTyping();
 		}
+	} else {
+		message.reply(`Role ${roleName} does not exist.`);
 	}
+	message.channel.stopTyping();
 	return null;
 }
 
