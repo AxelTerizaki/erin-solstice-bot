@@ -8,16 +8,19 @@ Discussing dev happens on the [Nanami Discord here](http://nanami.fr/discord)
 
 ## Features (skills)
 
+Implemented right now :
+
+- [Skill: Self-assignable roles]
+
 These are planned features, for now none are implemented (see issues)
 
 - [Skill: Random welcome / leave messages] Custom and random welcome / leave messages for your users
 - [Skill: User leaderboards] User XP/Level leaderboards
-- [Skill: Self-assignable roles]
 
 Later :
 
 - [Skill: User polls]
-- [Chessmaster] class 
+- [Chessmaster] class
 - [Skill: Currency management]
 - [Skill: Rec Room] with different activities
 
