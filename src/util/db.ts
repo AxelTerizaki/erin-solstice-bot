@@ -1,6 +1,7 @@
 import {resolve} from 'path';
 import { Connection, ConnectionOptions, createConnection } from 'typeorm';
 
+import UserLevel from '../entities/levels';
 import Role from '../entities/roles';
 import Setting from '../entities/settings';
 import User from '../entities/users';
@@ -20,7 +21,7 @@ export default class Database {
 			type: 'sqlite',
 			database: resolve(getState().dataPath, `db/${guildID}.sqlite`),
 			logging: true,
-			entities: [Setting, Role, User],
+			entities: [Setting, Role, User, UserLevel],
 			synchronize: true
 		};
 		this.guildID = guildID;
