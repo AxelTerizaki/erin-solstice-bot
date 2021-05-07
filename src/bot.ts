@@ -1,5 +1,5 @@
 import discord, { Client } from 'discord.js-commando';
-import fs from 'fs';
+import {promises as fs} from 'fs';
 import { join } from 'path';
 
 import { getConfig } from './util/config';
@@ -21,7 +21,7 @@ export async function connectBot(): Promise<void> {
 		});
 		client.login(config.token);
 		registerEvents();
-		registerCommands();
+		await registerCommands();
 		return new Promise((resolve) => {
 			client.on('ready', () => {
 				logger.info(`Erin is logged in as ${client.user.tag}`, { service: 'Discord' });
@@ -42,7 +42,7 @@ function registerEvents() {
 	});
 }
 
-function registerCommands() {
+async function registerCommands() {
 	const groupsToRegister = [
 		['erin', 'Erin test commands'],
 		['autoassignroles', 'Auto-assignable Roles'],
@@ -56,24 +56,17 @@ function registerCommands() {
 			ping: false, // Disabling it since we're making our own
 			unknownCommand: false, // Disabling unknown commands response
 		});
-	groupsToRegister.forEach((actualGroup) => {
+	for (const actualGroup of groupsToRegister) {
 		const groupName = actualGroup[0];
 		const modulesDir = join(__dirname, 'modules', groupName);
-		fs.readdir(modulesDir, (err, files) => {
-			if (!err) {
-				for (const file of files) {
-					if (file.endsWith('.map')) continue;
-					try {
-						client.registry.registerCommand(require(join(modulesDir, file)));
-					} catch(e) {
-						logger.error(`Unable to register command from file "${file}" : ${e}`);
-					}
-				}
-			} else {
-				logger.error(`Unable to register command from directory "${modulesDir}" : ${err}`);
+		const files = await fs.readdir(modulesDir);
+		for (const file of files) {
+			if (file.endsWith('.map')) continue;
+			try {
+				client.registry.registerCommand(require(join(modulesDir, file)));
+			} catch(e) {
+				logger.error(`Unable to register command from file "${file}" : ${e}`);
 			}
-		});
-	});
-
-
+		}
+	}
 }
