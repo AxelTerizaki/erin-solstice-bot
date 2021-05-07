@@ -61,13 +61,14 @@ function registerCommands() {
 		const modulesDir = join(__dirname, 'modules', groupName);
 		fs.readdir(modulesDir, (err, files) => {
 			if (!err) {
-				files.forEach(file => {
+				for (const file of files) {
+					if (file.endsWith('.map')) continue;
 					try {
 						client.registry.registerCommand(require(join(modulesDir, file)));
 					} catch(e) {
 						logger.error(`Unable to register command from file "${file}" : ${e}`);
 					}
-				});
+				}
 			} else {
 				logger.error(`Unable to register command from directory "${modulesDir}" : ${err}`);
 			}
