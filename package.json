@@ -5,6 +5,7 @@
   "main": "dist/src/index.js",
   "scripts": {
     "start": "ts-node src/index.ts",
+    "qstart": "node dist/index.js"
     "build": "npx rimraf \"dist\" && tsc --build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
