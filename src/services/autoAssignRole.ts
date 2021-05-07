@@ -38,7 +38,7 @@ export async function add(message: Message, roleName: string) {
 			message.reply(`You now have the role ${roleName} ! Enjoy it !`);
 		} catch (e) {
 			message.reply('There was some errors while adding you that role');
-			logger.error(`Error while adding role to member : ${e}`);
+			logger.error('Error while adding role to member', {obj: e, service: 'Role'});
 		}
 	} else {
 		message.reply(`Role ${roleName} does not exist.`);
@@ -58,7 +58,7 @@ export async function remove(message: Message, roleName: string) {
 			message.reply(`You now have the role ${roleName} ! Enjoy it !`);
 		} catch (e) {
 			message.reply('There was some errors while adding you that role');
-			logger.error(`Error while removing role from member : ${e}`);
+			logger.error('Error while removing role from member', {obj: e, service: 'Role'});
 		} finally {
 			message.channel.stopTyping();
 		}
@@ -81,7 +81,7 @@ export async function register(message: Message, roleName: string) {
 				message.reply('Role successfully registered as auto-assignable !');
 			} catch (e) {
 				message.reply('There was some errors during registering the role as auto-assignable');
-				logger.error(`Error while registering role ${role.name} as auto-assignable : ${e}`);
+				logger.error(`Error while registering role ${role.name} as auto-assignable`, {obj: e, service: 'Role'});
 			} finally {
 				message.channel.stopTyping();
 			}
@@ -110,7 +110,7 @@ export async function unregister(message: Message, roleName: string) {
 				message.reply('Role successfully unregistered from auto-assignable !');
 			} catch (e) {
 				message.reply('There was some errors during unregistering the role from auto-assignable');
-				logger.error(`Error while unregistering role ${role.name} from auto-assignable : ${e}`);
+				logger.error(`Error while unregistering role ${role.name} from auto-assignable`, {obj: e, service: 'Role'});
 			} finally {
 				message.channel.stopTyping();
 			}

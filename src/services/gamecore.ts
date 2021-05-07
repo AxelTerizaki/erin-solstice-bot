@@ -15,7 +15,7 @@ export async function money(message: Message) {
 		}
 	} catch (e) {
 		message.reply('There was some error while fetching user');
-		logger.error(`Error while fetching user ${e}`);
+		logger.error('Error while fetching user', {obj: e, service: 'Money'});
 	} finally {
 		message.channel.stopTyping();
 	}
