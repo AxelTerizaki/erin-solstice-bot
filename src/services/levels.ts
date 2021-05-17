@@ -19,7 +19,7 @@ export async function getGuildLevels(message: Message) {
 		for (const user of users) {
 			if (rank > 15) break;
 			if (!user.class) user.class = 'No Class';
-			desc.push(`${rank}. ${user.name} [${user.class}] Level ${user.level} (${user.xp} XP with ${user.messages} messages)`);
+			desc.push(`${rank}. **${user.name}** [${user.class}] Level **${user.level}** (**${user.xp}** XP with **${user.messages}** messages)`);
 			rank++;
 		}
 		sendEmbed(message, `Rankings for ${getGuild(message.guild.id).name}`, desc);
@@ -35,9 +35,9 @@ export async function getLevel(message: Message) {
 		const manager = getLevelManager(message.guild.id);
 		const user = await manager.getUserLevel(message.author.id);
 		sendEmbed(message, `${user.name}'s level information`, [
-			`[${user.class}] Level ${user.level}`,
-			`XP : ${user.xp}`,
-			`Messages : ${user.messages}`
+			`**Class :** [${user.class}] Level ${user.level}`,
+			`**XP :** ${user.xp}`,
+			`**Messages :** ${user.messages}`
 		]);
 	} catch (e) {
 		message.channel.send('There was some error while fetching level');
@@ -96,6 +96,7 @@ export async function setLevelClass(message: Message, className: string) {
 		}
 		if (className) {
 			data.push(`[${className} class obtained!]`);
+			data.push('');
 			data.push(`[${className} Level ${currentUser.level}!]`);
 		}
 		sendEmbed(message, `${currentUser.name}'s new class!`, data);
