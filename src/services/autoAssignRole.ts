@@ -1,6 +1,6 @@
 import { Message } from 'discord.js';
 
-import { getRoleManager } from '../dao/rolemanager';
+import { getRoleManager } from '../dao/roles';
 import logger from '../util/logger';
 
 export async function list(message: Message) {

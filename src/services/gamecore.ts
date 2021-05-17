@@ -1,7 +1,7 @@
 import { Message } from 'discord.js';
 
 import { getErin } from '../bot';
-import { getUserManager } from '../dao/usermanager';
+import { getUserManager } from '../dao/users';
 import logger from '../util/logger';
 import { format as formatMoney } from '../util/wimoney';
 
