@@ -13,6 +13,10 @@ setState({
 	dataPath: resolve(process.cwd(), 'data/')
 });
 
+process.on('uncaughtException', err => {
+	console.log(err);
+});
+
 async function main() {
 	// Make sure folders exist
 	await asyncCheckOrMkdir(resolve(getState().dataPath, 'db/'));
