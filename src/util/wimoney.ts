@@ -14,7 +14,7 @@ export const rates: Wimoney = {
 /**
  * Convert a flat money amount to Wandering Inn Money format
  * @param flat money amount
- * @returns 
+ * @returns
  */
 export function flat2wim(flat: number): Wimoney {
 	const res: Wimoney = {
@@ -34,7 +34,7 @@ export function flat2wim(flat: number): Wimoney {
 /**
  * Convert a flat money to properly formatted short string using Wandering Inn Money format
  * @param flat money amount
- * @returns 
+ * @returns
  */
 export function flat2wimString(flat: number): string {
 	let formatted = '';
@@ -59,8 +59,8 @@ export function flat2wimString(flat: number): string {
 
 /**
  * Convert back a Wandering Inn Money format to flat amount.
- * @param wim 
- * @returns 
+ * @param wim
+ * @returns
  */
 export function wim2flat(wim: Wimoney): number {
 	return wim.copper + (wim.silver * rates.silver) + (wim.gold * rates.gold);
@@ -69,7 +69,7 @@ export function wim2flat(wim: Wimoney): number {
 /**
  * Format a flat mount of money to a full proper text.
  * @param money money amount
- * @returns 
+ * @returns
  */
 export function format(money: number): string {
 	let res = '';
@@ -78,9 +78,9 @@ export function format(money: number): string {
 	} else {
 		const formatted = flat2wimString(money);
 		if(0 > money) { // should never happens, but who knows ?
-			res = `You actually owe the inn ${formatted} ! This is bad, you know.`;
+			res = `You actually owe the inn ${formatted}! This is bad, you know.`;
 		} else {
-			res = `You actually own ${formatted} !`;
+			res = `You actually own ${formatted}!`;
 		}
 	}
 	return res;

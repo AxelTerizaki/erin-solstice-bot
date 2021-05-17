@@ -1,9 +1,10 @@
-import { Message, MessageEmbed } from 'discord.js';
+import { Message } from 'discord.js';
 
 import { getErin, getGuild } from '../bot';
 import { getLevelManager } from '../dao/levels';
 import { GuildLevelMap } from '../types/levels';
 import { getConfig } from '../util/config';
+import { sendEmbed } from '../util/discord';
 import logger from '../util/logger';
 
 const guildLevelsMap: GuildLevelMap = new Map();
@@ -21,11 +22,7 @@ export async function getGuildLevels(message: Message) {
 			desc.push(`${rank}. ${user.name} [${user.class}] Level ${user.level} (${user.xp} XP with ${user.messages} messages)`);
 			rank++;
 		}
-		const embed = new MessageEmbed()
-			.setTitle(`Rankings for ${getGuild(message.guild.id).name}`)
-			.setColor(0xff0000)
-			.setDescription(desc.join('\n'));
-		message.channel.send(embed);
+		sendEmbed(message, `Rankings for ${getGuild(message.guild.id).name}`, desc);
 	} catch(err) {
 		logger.error('Error while fetching levels', {obj: err, service: 'Levels'});
 	}
@@ -37,7 +34,11 @@ export async function getLevel(message: Message) {
 	try {
 		const manager = getLevelManager(message.guild.id);
 		const user = await manager.getUserLevel(message.author.id);
-		message.reply(`[${user.class}] level ${user.level} with ${user.xp} XP and ${user.messages}!`);
+		sendEmbed(message, `${user.name}'s level information`, [
+			`[${user.class}] Level ${user.level}`,
+			`XP : ${user.xp}`,
+			`Messages : ${user.messages}`
+		]);
 	} catch (e) {
 		message.channel.send('There was some error while fetching level');
 		logger.error('Error while fetching user level', {obj: e, service: 'Levels'});
@@ -89,13 +90,15 @@ export async function setLevelClass(message: Message, className: string) {
 		if (!className) className = null;
 		currentUser.class = className;
 		await manager.saveLevel(currentUser);
+		const data = [];
 		if (oldClass && oldClass !== currentUser.class) {
-			message.reply(`[${oldClass} class removed!]`);
+			data.push(`[${oldClass} class removed!]`);
 		}
 		if (className) {
-			message.reply(`[${className} class obtained!]`);
-			message.reply(`[${className} Level ${currentUser.level}!]`);
+			data.push(`[${className} class obtained!]`);
+			data.push(`[${className} Level ${currentUser.level}!]`);
 		}
+		sendEmbed(message, `${currentUser.name}'s new class!`, data);
 	} catch(err) {
 		logger.error('Error while setting new class', {obj: err, service: 'Levels'});
 		message.reply('Sorry! There was an error while setting your new class');

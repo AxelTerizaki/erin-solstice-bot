@@ -2,6 +2,7 @@ import { Message } from 'discord.js';
 
 import { getErin } from '../bot';
 import { getUserManager } from '../dao/users';
+import { sendEmbed } from '../util/discord';
 import logger from '../util/logger';
 import { format as formatMoney } from '../util/wimoney';
 
@@ -31,15 +32,18 @@ async function moneyForGuild(message: Message, userId: string, guildId: string) 
 	if (!user) {
 		user = await manager.saveMoney(userId, 0);
 	}
-	return message.reply(formatMoney(user.money));
+	sendEmbed(message, `${user.id}'s Merchant's Guild Account`, [formatMoney(user.money)]);
+	return null;
 }
 
 async function moneyForGuilds(message: Message, userId: string) {
+	const data = [];
 	for (const guild of getErin().guilds.cache.values()) {
 		const manager = getUserManager(guild.id);
 	    const user = await manager.getUser(userId);
 		if(user) { // if no user, we won't display anything
-			message.reply(`${guild.name} : ${formatMoney(user.money)}`);
+			data.push(`- ${guild.name} : ${formatMoney(user.money)}`);
 		}
 	}
+	sendEmbed(message, 'Your Merchant\'s Guild account', data);
 }
