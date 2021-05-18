@@ -4,7 +4,7 @@ import { getErin, getGuild } from '../bot';
 import { getLevelManager } from '../dao/levels';
 import { GuildLevelMap } from '../types/levels';
 import { getConfig } from '../util/config';
-import { sendEmbed } from '../util/discord';
+import { embed } from '../util/discord';
 import logger from '../util/logger';
 
 const guildLevelsMap: GuildLevelMap = new Map();
@@ -22,7 +22,8 @@ export async function getGuildLevels(message: Message) {
 			desc.push(`${rank}. **${user.name}** [${user.class}] Level **${user.level}** (**${user.xp}** XP with **${user.messages}** messages)`);
 			rank++;
 		}
-		sendEmbed(message, `Rankings for ${getGuild(message.guild.id).name}`, desc);
+		const msg = embed(`Rankings for ${getGuild(message.guild.id).name}`, desc);
+		message.channel.send(msg);
 	} catch(err) {
 		logger.error('Error while fetching levels', {obj: err, service: 'Levels'});
 	}
@@ -34,11 +35,12 @@ export async function getLevel(message: Message) {
 	try {
 		const manager = getLevelManager(message.guild.id);
 		const user = await manager.getUserLevel(message.author.id);
-		sendEmbed(message, `${user.name}'s level information`, [
+		const msg = embed(`${user.name}'s level information`, [
 			`**Class :** [${user.class}] Level ${user.level}`,
 			`**XP :** ${user.xp}`,
 			`**Messages :** ${user.messages}`
 		]);
+		message.channel.send(msg);
 	} catch (e) {
 		message.channel.send('There was some error while fetching level');
 		logger.error('Error while fetching user level', {obj: e, service: 'Levels'});
@@ -99,7 +101,8 @@ export async function setLevelClass(message: Message, className: string) {
 			data.push('');
 			data.push(`[${className} Level ${currentUser.level}!]`);
 		}
-		sendEmbed(message, `${currentUser.name}'s new class!`, data);
+		const msg = embed(`${currentUser.name}'s new class!`, data);
+		message.channel.send(msg);
 	} catch(err) {
 		logger.error('Error while setting new class', {obj: err, service: 'Levels'});
 		message.reply('Sorry! There was an error while setting your new class');

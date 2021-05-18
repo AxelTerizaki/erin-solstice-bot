@@ -19,3 +19,9 @@ export function time(): string {
 	const secStr = (sec < 10 ? '0' : '') + sec;
 	return `${hourStr}:${minStr}:${secStr}`;
 }
+
+export function isValidDate(date: string): boolean {
+	const timestamp = Date.parse(date);
+	// Returns true if timestamp is valid, thus date
+	return !isNaN(timestamp);
+}
