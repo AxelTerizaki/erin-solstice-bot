@@ -1,6 +1,8 @@
 import {resolve} from 'path';
 
 import { connectBot, getErin } from './bot';
+import { initLevels } from './services/levels';
+import { initReminders } from './services/reminders';
 //import Setting from './entities/settings';
 import { readConfig } from './util/config';
 import Database from './util/db';
@@ -33,15 +35,10 @@ async function main() {
 		logger.info(`Serves ${guild.name}`, {service: 'Guilds'});
 		const guildDB = new Database(guild.id);
 		await guildDB.init();
-		// Sample code to insert data, delete later
-		/*
-		const manager = guildDB.connection.manager;
-		await manager.insert(Setting, {
-			setting: 'Test',
-			value: 'lol'
-		});
-		*/
 	}
+	initLevels();
+	initReminders();
+
 
 }
 

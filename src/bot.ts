@@ -2,7 +2,6 @@ import discord, { Client } from 'discord.js-commando';
 import {promises as fs} from 'fs';
 import { join } from 'path';
 
-import { initLevels } from './services/levels';
 import { getConfig } from './util/config';
 import logger from './util/logger';
 
@@ -27,7 +26,6 @@ export async function connectBot(): Promise<void> {
 			client.on('ready', () => {
 				logger.info(`Erin is logged in as ${client.user.tag}`, { service: 'Discord' });
 				client.user.setActivity('Hello, I\'m Erin!');
-				initLevels();
 				resolve();
 			});
 			// FIXME : find how to reject if connection fails
@@ -50,6 +48,7 @@ async function registerCommands() {
 		['autoassignroles', 'Auto-assignable Roles'],
 		['game', 'Money and core game commands'],
 		['levels', 'Levels and ranks'],
+		['reminders', 'Reminders']
 	];
 	client.registry
 		.registerDefaultTypes()

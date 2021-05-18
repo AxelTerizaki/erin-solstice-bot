@@ -10,16 +10,17 @@ Discussing dev happens on the [Nanami Discord here](http://nanami.fr/discord)
 
 Implemented right now :
 
-- [Skill: Self-assignable roles]
+- [Skill: Role Distribution] Auto-assignable roles
 - [Skill: User leaderboards] User XP/Level leaderboards
+- [Skill: Perfect Reminder] Reminders
 
 These are planned features, for now none are implemented (see issues)
 
-- [Skill: Random welcome / leave messages] Custom and random welcome / leave messages for your users
-- [Skill: User polls]
+- [Skill: Warm Welcome] Custom and random welcome / leave messages for your users
+- [Skill: Polls] User polls
 - [Chess Commentator] class
 - [Skill: Currency management]
-- [Skill: Rec Room] with different activities
+- [Inn: Rec Room] with different activities
 
 ## How to use
 
