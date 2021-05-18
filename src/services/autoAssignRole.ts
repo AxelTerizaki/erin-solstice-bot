@@ -74,10 +74,14 @@ export async function remove(message: Message, roleName: string) {
 
 export async function register(message: Message, roleName: string) {
 	message.channel.startTyping();
-	logger.debug('Loading roles...');
+	// Check if user has the correct role to do this
+	if (!message.member.hasPermission('MANAGE_ROLES')) {
+		sendEmbed(message, 'Roles', ['I\'m sorry but you cannot do that!']);
+		message.channel.stopTyping();
+		return null;
+	}
 	const roles = message.guild.roles;
 	if (roles) {
-		logger.debug(`Finding role ${roleName} ...`);
 		const role = roles.cache.find(role => role.name.toLowerCase() === roleName.toLowerCase());
 		if (role) {
 			logger.debug(`Registering role ${roleName} ...`);
@@ -103,10 +107,13 @@ export async function register(message: Message, roleName: string) {
 
 export async function unregister(message: Message, roleName: string) {
 	message.channel.startTyping();
-	logger.debug('Loading roles...');
+	if (!message.member.hasPermission('MANAGE_ROLES')) {
+		sendEmbed(message, 'Roles', ['I\'m sorry but you cannot do that!']);
+		message.channel.stopTyping();
+		return null;
+	}
 	const roles = message.guild.roles;
 	if (roles) {
-		logger.debug(`Finding role ${roleName} ...`);
 		const role = roles.cache.find(role => role.name.toLowerCase() === roleName.toLowerCase());
 		if (role) {
 			logger.debug(`Unregistering role ${roleName} ...`);
