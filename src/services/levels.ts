@@ -55,6 +55,8 @@ export async function initLevels() {
 	getErin().on('message', message => {
 		// Ignore commandes starting with prefix
 		if (message.content.startsWith(getConfig().prefix)) return;
+		// Drop message if not in a guild
+		if (!message.guild) return;
 		// First we check if it's been a minute since the user has posted
 		if (!guildLevelsMap.get(message.guild.id)) {
 			guildLevelsMap.set(message.guild.id, new Map());
