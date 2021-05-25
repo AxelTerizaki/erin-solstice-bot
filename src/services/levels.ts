@@ -34,11 +34,14 @@ export async function getLevel(message: Message) {
 	message.channel.startTyping();
 	try {
 		const manager = getLevelManager(message.guild.id);
-		const user = await manager.getUserLevel(message.author.id);
+		const users = await manager.getGuildLevels();
+		const userIndex = users.findIndex(u => u.id === message.author.id);
+		const user = users[userIndex];
 		const msg = embed(`${user.name}'s level information`, [
 			`**Class :** [${user.class}] Level ${user.level}`,
 			`**XP :** ${user.xp}`,
-			`**Messages :** ${user.messages}`
+			`**Messages :** ${user.messages}`,
+			`**Rank :** ${userIndex}`
 		]);
 		message.channel.send(msg);
 	} catch (e) {
