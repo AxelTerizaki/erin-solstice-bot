@@ -20,7 +20,7 @@ export default class RoleManagerService {
 	guildId: string
 
 	async registerAutoAssignable(id: string, name: string, assignable: boolean): Promise<Role> {
-		const db = getDB(this.guildId);
+		const db = await getDB(this.guildId);
 		const repo = db.connection.getRepository(Role);
 		const r = new Role();
 		r.id = id;
@@ -30,13 +30,13 @@ export default class RoleManagerService {
 	}
 
 	async unregisterAutoAssignable(roleId: string): Promise<any> {
-		const db = getDB(this.guildId);
+		const db = await getDB(this.guildId);
 		const repo = db.connection.getRepository(Role);
 		return repo.delete(roleId);
 	}
 
 	async getAutoAssignableList(): Promise<Role[]> {
-		const db = getDB(this.guildId);
+		const db = await getDB(this.guildId);
 		const repo = db.connection.getRepository(Role);
 		return repo.find({
 			where: {
@@ -46,7 +46,7 @@ export default class RoleManagerService {
 	}
 
 	async getAutoAssignable(roleName: string): Promise<Role> {
-		const db = getDB(this.guildId);
+		const db = await getDB(this.guildId);
 		const repo = db.connection.getRepository(Role);
 		return repo.findOne({
 			where: {

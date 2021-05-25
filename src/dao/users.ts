@@ -18,12 +18,12 @@ export default class UserManagerService {
     guildId: string
 
     /**
-     * 
-     * @param id 
-     * @returns 
+     *
+     * @param id
+     * @returns
      */
     async getUser(id: string): Promise<User> {
-    	const db = getDB(this.guildId);
+    	const db = await getDB(this.guildId);
     	const repo = db.connection.getRepository(User);
     	return repo.findOne(id);
     }
@@ -32,10 +32,10 @@ export default class UserManagerService {
      * Save an user, replacing their money.
      * @param id member ID (snowflake format)
      * @param money money to change with
-     * @returns 
+     * @returns
      */
     async saveMoney(id: string, money: number): Promise<User> {
-    	const db = getDB(this.guildId);
+    	const db = await getDB(this.guildId);
     	const repo = db.connection.getRepository(User);
     	const r = new User();
     	r.id = id;
@@ -47,10 +47,10 @@ export default class UserManagerService {
      * Save an user, adding or removing some money.
      * @param id member ID (snowflake format)
      * @param addingMoney money to add (or to remove if negative)
-     * @returns 
+     * @returns
      */
     async changeMoney(id: string, addingMoney: number): Promise<User> {
-    	const db = getDB(this.guildId);
+    	const db = await getDB(this.guildId);
     	const repo = db.connection.getRepository(User);
     	let r = await this.getUser(id);
     	if (r) {

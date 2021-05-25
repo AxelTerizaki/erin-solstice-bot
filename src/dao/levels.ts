@@ -23,7 +23,7 @@ export default class UserLevelManagerService {
      * @returns
      */
     async getUserLevel(id: string): Promise<UserLevel> {
-    	const db = getDB(this.guildId);
+    	const db = await getDB(this.guildId);
     	const repo = db.connection.getRepository(UserLevel);
     	const user = repo.findOne(id);
     	return user;
@@ -34,7 +34,7 @@ export default class UserLevelManagerService {
      * @returns
      */
 	 async getGuildLevels(): Promise<UserLevel[]> {
-    	const db = getDB(this.guildId);
+    	const db = await getDB(this.guildId);
     	const repo = db.connection.getRepository(UserLevel);
     	return repo.find({
     		order: {
@@ -49,7 +49,7 @@ export default class UserLevelManagerService {
      * @returns
      */
     async saveLevel(user: UserLevel) {
-    	const db = getDB(this.guildId);
+    	const db = await getDB(this.guildId);
     	const repo = db.connection.getRepository(UserLevel);
     	let r = new UserLevel();
     	r = {...r, ...user};
