@@ -131,7 +131,7 @@ async function computeNewMessage(message: Message) {
 		? user.messages + 1
 		: 1;
 	user.level = computeLevel(user.xp);
-	user.name = guildUser.nickname;
+	user.name = guildUser.nickname || guildUser.user.username;
 	user.avatar = message.author.avatarURL();
 	await manager.saveLevel(user);
 	const levelsDate = guildLevelsMap.get(message.guild.id);
