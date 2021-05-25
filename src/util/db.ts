@@ -10,8 +10,13 @@ import { getState } from './state';
 
 export const dbs = {};
 
-export function getDB(guildID: string): Database {
+export async function getDB(guildID: string): Promise<Database> {
 	// the guild ID is a number, but the property is a string
+	if (!dbs[guildID]) {
+		// If DB doesn't exist yet create it
+		const guildDB = new Database(guildID);
+		await guildDB.init();
+	}
 	return dbs[guildID];
 }
 
@@ -21,7 +26,7 @@ export default class Database {
 			name: guildID,
 			type: 'sqlite',
 			database: resolve(getState().dataPath, `db/${guildID}.sqlite`),
-			logging: true,
+			logging: false,
 			entities: [Setting, Role, User, Reminder, UserLevel],
 			synchronize: true
 		};
