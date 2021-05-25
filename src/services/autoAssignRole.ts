@@ -12,10 +12,13 @@ export async function list(message: Message) {
 		const data = [];
 		if (assignableRoles.length) {
 			data.push(`There ${assignableRoles.length > 1 ? 'are' : 'is'}
-${assignableRoles.length} role${assignableRoles.length > 1 ? 's' : ''}\
+${assignableRoles.length} role${assignableRoles.length > 1 ? 's' : ''} \
 which can be self-assigned :`);
+			const roles = message.guild.roles.cache;
 			for (const role of assignableRoles) {
-				data.push(`- ${role.name}`);
+				// Get the role name from the cache first to make sure we still have it in the guild
+				const guildRole = roles.find(r => r.id === role.id);
+				if (guildRole) data.push(`- ${guildRole.name}`);
 			}
 			data.push('');
 			data.push('Use `role <role>` to assign yourself a role');
