@@ -6,7 +6,7 @@ export default class RoleRemoveCommand extends Command {
 	constructor(client: Client) {
 		super(client, {
 			name: 'roleremove',
-			aliases: ['unassign'],
+			aliases: ['leave', 'iamnot', 'iamn', 'unassign'],
 			group: 'autoassignroles',
 			memberName: 'roleremove',
 			description: 'Unassign yourself a role',

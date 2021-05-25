@@ -6,7 +6,7 @@ export default class RoleAddCommand extends Command {
 	constructor(client: Client) {
 		super(client, {
 			name: 'roleadd',
-			aliases: ['role', 'r', 'assign'],
+			aliases: ['iam', 'join', 'role', 'r', 'assign'],
 			group: 'autoassignroles',
 			memberName: 'roleadd',
 			description: 'Assign yourself a role',
