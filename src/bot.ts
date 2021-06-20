@@ -41,7 +41,7 @@ function registerEvents() {
 		logger.error('Unknown error occured: ', { service: 'Discord', obj: err });
 	});
 	client.on('messageDelete', message => {
-		logger.debug(`Message deleted : "${message.content}" by ${message.author}`, { service: 'Experiment'});
+		logger.debug(`Message deleted : "${message.content}" by ${message.author.tag}`, { service: 'Experiment'});
 	});
 }
 
