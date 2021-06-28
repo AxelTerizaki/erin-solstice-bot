@@ -63,7 +63,7 @@ export async function getReminders(message: Message) {
 		if (reminders.length > 0) {
 			const msg = ['Here are your reminders'];
 			for (const reminder of reminders) {
-				msg.push(`${reminder.id}. \`${reminder.content}\` on \`${reminder.remind_at}\``);
+				msg.push(`${reminder.id}. \`${reminder.remind_at.toISOString()}\`: ${reminder.content}`);
 			}
 			msg.push('To delete a reminder, use the `forgetreminder <id>` command.');
 			message.channel.send(embed('Your reminders', msg));
