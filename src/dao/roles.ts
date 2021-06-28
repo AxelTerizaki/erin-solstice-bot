@@ -6,7 +6,7 @@ import { getDB } from '../util/db';
 export const managers = {};
 
 export function getRoleManager(guildId: string): RoleManagerService {
-	if(!(guildId in managers)) {
+	if (!(guildId in managers)) {
 		managers[guildId] = new RoleManagerService(guildId);
 	}
 	return managers[guildId];

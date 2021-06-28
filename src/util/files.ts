@@ -15,7 +15,7 @@ export async function asyncCheckOrMkdir(dir: string) {
 	try {
 		const resolvedDir = resolve(dir);
 		if (!await asyncExists(resolvedDir)) await mkdirp(resolvedDir);
-	} catch(err) {
+	} catch (err) {
 		throw `${dir} is unreachable and cannot be created. \
 		Check if drive is connected or permissions to that directory are correct : \
 		${err} \

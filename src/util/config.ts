@@ -13,7 +13,7 @@ export async function readConfig() {
 		config = JSON.parse(configData);
 		logger.info('Configuration loaded', {service: 'Config'});
 		//logger.debug('Parsed configuration', {service: 'Config', obj: config});
-	} catch(err) {
+	} catch (err) {
 		logger.error('Unable to read config', {service: 'Config', obj: err});
 		throw err;
 	}

@@ -40,16 +40,16 @@ export function flat2wimString(flat: number): string {
 	let formatted = '';
 	const f: string[] = [];
 	const wim: Wimoney = flat2wim(flat);
-	if(0 < wim.gold) {
+	if (0 < wim.gold) {
 		f.push(`${wim.gold} golden coin${(wim.gold > 1)? 's':''}`);
 	}
-	if(0 < wim.silver) {
+	if (0 < wim.silver) {
 		f.push(`${wim.silver} silver coin${(wim.silver > 1)? 's':''}`);
 	}
-	if(0 < wim.copper) {
+	if (0 < wim.copper) {
 		f.push(`${wim.copper} copper coin${(wim.copper > 1)? 's':''}`);
 	}
-	if(f.length > 1) {
+	if (f.length > 1) {
 		formatted = `${f.slice(0, -1).join(', ')} and ${f.slice(-1)[0]}`;
 	} else {
 		formatted = f[0];
@@ -73,11 +73,11 @@ export function wim2flat(wim: Wimoney): number {
  */
 export function format(money: number): string {
 	let res = '';
-	if(0 === money) {
+	if (0 === money) {
 		res = 'You are currently broke, without any copper coin.';
 	} else {
 		const formatted = flat2wimString(money);
-		if(0 > money) { // should never happens, but who knows ?
+		if (0 > money) { // should never happens, but who knows ?
 			res = `You actually owe the inn ${formatted}! This is bad, you know.`;
 		} else {
 			res = `You actually own ${formatted}!`;

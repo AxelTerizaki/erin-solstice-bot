@@ -9,7 +9,7 @@ import { format as formatMoney } from '../util/wimoney';
 export async function money(message: Message) {
 	message.channel.startTyping();
 	try {
-		if(message.guild) {
+		if (message.guild) {
 		    await moneyForGuild(message, message.member.id, message.guild.id);
 		} else { // no guild
 			await moneyForGuilds(message, message.author.id);
@@ -42,7 +42,7 @@ async function moneyForGuilds(message: Message, userId: string) {
 	for (const guild of getErin().guilds.cache.values()) {
 		const manager = getUserManager(guild.id);
 	    const user = await manager.getUser(userId);
-		if(user) { // if no user, we won't display anything
+		if (user) { // if no user, we won't display anything
 			data.push(`- ${guild.name} : ${formatMoney(user.money)}`);
 		}
 	}

@@ -23,7 +23,7 @@ async function manageReminder(guildID: string) {
 				manager.deleteReminder(reminder.id);
 			}
 		}
-	} catch(err) {
+	} catch (err) {
 		logger.error('Error while fetching reminders', {obj: err, service: 'Reminders'});
 	}
 }
@@ -86,7 +86,7 @@ export async function setReminder(message: Message, remind_time: string, content
 			`A new reminder has been set on \`${date.toISOString()}\`:`,
 			content
 		]));
-	} catch(err) {
+	} catch (err) {
 		logger.error('Error while setting a new reminder', {obj: err, service: 'Reminder'});
 		message.reply('Sorry! There was an error while setting your reminder');
 	}

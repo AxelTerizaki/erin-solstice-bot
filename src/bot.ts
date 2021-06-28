@@ -69,7 +69,7 @@ async function registerCommands() {
 			if (file.endsWith('.map')) continue;
 			try {
 				client.registry.registerCommand(require(join(modulesDir, file)));
-			} catch(e) {
+			} catch (e) {
 				logger.error(`Unable to register command from file "${file}" : ${e}`);
 			}
 		}

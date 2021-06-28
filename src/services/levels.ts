@@ -24,7 +24,7 @@ export async function getGuildLevels(message: Message) {
 		}
 		const msg = embed(`Rankings for ${getGuild(message.guild.id).name}`, desc);
 		message.channel.send(msg);
-	} catch(err) {
+	} catch (err) {
 		logger.error('Error while fetching levels', {obj: err, service: 'Levels'});
 	}
 	return null;
@@ -109,7 +109,7 @@ export async function setLevelClass(message: Message, className: string) {
 		}
 		const msg = embed(`${currentUser.name}'s new class!`, data);
 		message.channel.send(msg);
-	} catch(err) {
+	} catch (err) {
 		logger.error('Error while setting new class', {obj: err, service: 'Levels'});
 		message.reply('Sorry! There was an error while setting your new class');
 	}
