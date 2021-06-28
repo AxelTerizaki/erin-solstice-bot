@@ -39,6 +39,43 @@ export async function initReminders() {
 	manageAllReminders();
 }
 
+export async function removeReminder(message: Message, id: number) {
+	try {
+		const manager = getReminderManager(message.guild.id);
+		const reminder = await manager.getReminder(id);
+		if (reminder.user_id !== message.author.id) {
+			message.channel.send(embed('Reminders', ['Sorry but this reminder isn\'t yours.']));
+			return null;
+		}
+		await manager.deleteReminder(id);
+		message.channel.send(embed('Reminders', ['Okay, I\'ll forget about that!']));
+		return null;
+	} catch (err) {
+		logger.error('Error while removing a reminder', {obj: err, service: 'Reminder'});
+		message.reply('Sorry! There was an error while removing a reminder');
+	}
+}
+
+export async function getReminders(message: Message) {
+	try {
+		const manager = getReminderManager(message.guild.id);
+		const reminders = await manager.getReminders(message.author.id);
+		if (reminders.length > 0) {
+			const msg = ['Here are your reminders'];
+			for (const reminder of reminders) {
+				msg.push(`${reminder.id}. \`${reminder.content}\` on \`${reminder.remind_at}\``);
+			}
+			msg.push('To delete a reminder, use the `forgetreminder <id>` command.');
+			message.channel.send(embed('Your reminders', msg));
+		} else {
+			message.channel.send(embed('Your reminders', ['You have no reminders set!']));
+		}
+	} catch (err) {
+		logger.error('Error while getting reminders', {obj: err, service: 'Reminder'});
+		message.reply('Sorry! There was an error while getting your reminders');
+	}
+}
+
 export async function setReminder(message: Message, remind_time: string, content: string) {
 	try {
 		const manager = getReminderManager(message.guild.id);

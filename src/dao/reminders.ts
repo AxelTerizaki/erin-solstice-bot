@@ -22,11 +22,21 @@ export default class ReminderManagerService {
     	const repo = db.connection.getRepository(Reminder);
     	await repo.delete(id);
     }
-
-    async getReminders(): Promise<Reminder[]> {
+	
+    async getReminders(user?: string): Promise<Reminder[]> {
     	const db = await getDB(this.guildId);
     	const repo = db.connection.getRepository(Reminder);
-    	const reminders = repo.find();
+    	const searchOptions = user 
+    		? { where: { user_id: user }}
+    		: undefined;
+    	const reminders = repo.find(searchOptions);
+    	return reminders;
+    }
+
+    async getReminder(id?: number): Promise<Reminder> {
+    	const db = await getDB(this.guildId);
+    	const repo = db.connection.getRepository(Reminder);    	
+    	const reminders = repo.findOne(id);
     	return reminders;
     }
 
