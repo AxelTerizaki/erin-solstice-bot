@@ -79,13 +79,6 @@ export async function remove(message: Message, roleName: string) {
 
 export async function register(message: Message, roleName: string) {
 	message.channel.startTyping();
-	// Check if user has the correct role to do this
-	if (!message.member.hasPermission('MANAGE_ROLES')) {
-		const msg = embed('Roles', ['I\'m sorry but you cannot do that!']);
-		message.channel.send(msg);
-		message.channel.stopTyping();
-		return null;
-	}
 	const roles = message.guild.roles;
 	if (roles) {
 		const role = roles.cache.find(role => role.name.toLowerCase() === roleName.toLowerCase());
@@ -115,12 +108,6 @@ export async function register(message: Message, roleName: string) {
 
 export async function unregister(message: Message, roleName: string) {
 	message.channel.startTyping();
-	if (!message.member.hasPermission('MANAGE_ROLES')) {
-		const msg = embed('Roles', ['I\'m sorry but you cannot do that!']);
-		message.channel.send(msg);
-		message.channel.stopTyping();
-		return null;
-	}
 	const roles = message.guild.roles;
 	if (roles) {
 		const role = roles.cache.find(role => role.name.toLowerCase() === roleName.toLowerCase());
