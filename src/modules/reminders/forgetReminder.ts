@@ -15,8 +15,8 @@ export default class SetReminderCommand extends Command {
 					key: 'id',
 					prompt: 'Argument "id" is mandatory',
 					label: 'ID number',
-					type: 'number'
-				},				
+					type: 'integer'
+				},
 			],
 			guildOnly: false
 		});
