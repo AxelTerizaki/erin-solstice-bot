@@ -1,7 +1,7 @@
 import { Message } from 'discord.js';
 import {Client, Command} from 'discord.js-commando';
 
-import { money } from '../../services/gamecore';
+import { money } from '../../services/game';
 
 export default class MoneyCommand extends Command {
 	constructor(client: Client) {
