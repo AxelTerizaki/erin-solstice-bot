@@ -1,3 +1,5 @@
+import Inventory from '../entities/inventories';
+import Item from '../entities/items';
 import User from '../entities/users';
 import { getDB } from '../util/db';
 
@@ -8,6 +10,10 @@ export function getUserManager(guildId: string): UserManagerService {
 		managers[guildId] = new UserManagerService(guildId);
 	}
 	return managers[guildId];
+}
+
+export async function getCurrentUser(guildId: string, memberId: string): Promise<User> {
+	return getUserManager(guildId).getUser(memberId);
 }
 
 export default class UserManagerService {
@@ -61,5 +67,31 @@ export default class UserManagerService {
     		r.money = addingMoney;
     	}
     	return repo.save(r);
+    }
+
+    async addItem(userid: string, item: Item, nb: number) {
+    	const db = await getDB(this.guildId);
+    	const repo = db.connection.getRepository(Inventory);
+    	const u = await this.getUser(userid);
+    	const inv = await repo.find({where: {user: userid}, relations: ['item', 'user']});
+    	if(inv) { // user MUST exist, as we checked their money just before.
+    		let lnk = inv.find(i => i.item.id === item.id);
+    		if(!lnk) {
+    			lnk = new Inventory();
+    			lnk.nb = 0;
+    			lnk.user = u;
+    			lnk.item = item;
+    		}
+    		lnk.nb += nb;
+    		await repo.save(lnk);
+    	}
+    	return null;
+    }
+
+    async listItems(userid: string) {
+    	const db = await getDB(this.guildId);
+    	const repo = db.connection.getRepository(Inventory);
+    	const inv = await repo.find({where: {user: userid}, relations: ['item']});
+    	return inv? inv:null;
     }
 }

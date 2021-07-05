@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+
+import Inventory from './inventories';
 
 @Entity()
 export default class User {
@@ -7,4 +9,7 @@ export default class User {
 
     @Column()
     money: number;
+
+    @OneToMany(() => Inventory, inv => inv.user)
+    inventory: Inventory[];
 }
