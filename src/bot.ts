@@ -48,7 +48,8 @@ async function registerCommands() {
 		['autoassignroles', 'Auto-assignable Roles'],
 		['game', 'Money and core game commands'],
 		['levels', 'Levels and ranks'],
-		['reminders', 'Reminders']
+		['reminders', 'Reminders'],
+		['addMessage', 'Add a message in DB']
 	];
 	client.registry
 		.registerDefaultTypes()
