@@ -70,13 +70,19 @@ export async function initLevels() {
 		if (levelsDate) {
 			const oneMinuteAgo = new Date();
 			oneMinuteAgo.setMinutes(oneMinuteAgo.getMinutes() - 1);
-			if (levelsDate < oneMinuteAgo) {
+			if (levelsDate.lastMessageDate < oneMinuteAgo) {
 				// User hasn't posted any message since at least a minute ago, add XP and all.
-				computeNewMessage(message);
+				computeNewMessage(message, levelsDate.numberOfMessages + 1);
+			} else {
+				// We don't compute new XP, but we'll nonetheless add the message to a counter so we can properly increment the message count.
+				levelsDateMap.set(message.author.id, {
+					lastMessageDate: levelsDate.lastMessageDate,
+					numberOfMessages: levelsDate.numberOfMessages++
+				});
 			}
 		} else {
 			// User has no date, adding it
-			computeNewMessage(message);
+			levelsDateMap.set(message.author.id, { lastMessageDate: new Date(), numberOfMessages: 1})
 		}
 	});
 }
@@ -116,7 +122,7 @@ export async function setLevelClass(message: Message, className: string) {
 	return null;
 }
 
-async function computeNewMessage(message: Message) {
+async function computeNewMessage(message: Message, numberOfMessages: number) {
 	const manager = getLevelManager(message.guild.id);
 	const currentUser = await manager.getUserLevel(message.author.id);
 	// XP for this message
@@ -129,14 +135,14 @@ async function computeNewMessage(message: Message) {
 		? user.xp + newXP
 		: newXP;
 	user.messages = currentUser
-		? user.messages + 1
+		? user.messages + numberOfMessages
 		: 1;
 	user.level = computeLevel(user.xp);
 	user.name = guildUser.nickname || guildUser.user.username;
 	user.avatar = message.author.avatarURL();
 	await manager.saveLevel(user);
 	const levelsDate = guildLevelsMap.get(message.guild.id);
-	levelsDate.set(message.author.id, new Date());
+	levelsDate.set(message.author.id, { lastMessageDate: new Date(), numberOfMessages: 0});
 	guildLevelsMap.set(message.guild.id, levelsDate);
 }
 
