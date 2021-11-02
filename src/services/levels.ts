@@ -77,7 +77,7 @@ export async function initLevels() {
 				// We don't compute new XP, but we'll nonetheless add the message to a counter so we can properly increment the message count.
 				levelsDateMap.set(message.author.id, {
 					lastMessageDate: levelsDate.lastMessageDate,
-					numberOfMessages: levelsDate.numberOfMessages++
+					numberOfMessages: levelsDate.numberOfMessages + 1
 				});
 			}
 		} else {
