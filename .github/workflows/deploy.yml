@@ -8,16 +8,17 @@ on:
 jobs:  
   deploy:
     runs-on: ubuntu-latest
+    environment: production
     steps:
     - name: Checkout 
       uses: actions/checkout@v2 # Required to mount the Github Workspace to a volume 
     - name: Copy
       uses: easingthemes/ssh-deploy@main
       env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+        SSH_PRIVATE_KEY: ${{ SSH_KEY }}
         ARGS: "-rltgoDzvO --delete"          
-        REMOTE_HOST: ${{ secrets.HOST }}
-        REMOTE_USER: ${{ secrets.USERNAME }}
+        REMOTE_HOST: ${{ HOST }}
+        REMOTE_USER: ${{ USERNAME }}
         TARGET: "prod/"
         EXCLUDE: "data/, node_modules/, logs/, .git/"
     
@@ -34,9 +35,9 @@ jobs:
             StrictHostKeyChecking no
           END
       env:
-        SSH_USER: ${{ secrets.USERNAME }}
-        SSH_KEY: ${{ secrets.SSH_KEY }}
-        SSH_HOST: ${{ secrets.HOST }}
+        SSH_USER: ${{ USERNAME }}
+        SSH_KEY: ${{ SSH_KEY }}
+        SSH_HOST: ${{ HOST }}
 
     - name: Install and build
       run: ssh staging 'cd prod ; yarn install ; yarn build'
