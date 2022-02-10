@@ -32,8 +32,8 @@ jobs:
           HostName $REMOTE_HOST
           User $REMOTE_USER
           IdentityFile ~/.ssh/staging.key
-            StrictHostKeyChecking no
-          END
+          StrictHostKeyChecking no
+        END
       env: 
         REMOTE_USER: ${{ secrets.REMOTE_USER }}
         REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
