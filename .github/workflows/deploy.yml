@@ -17,6 +17,7 @@ jobs:
       env:
         REMOTE_USER: ${{ secrets.REMOTE_USER }}
         REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         ARGS: "-rltgoDzvO --delete"          
         TARGET: "prod/"
         EXCLUDE: "data/, node_modules/, logs/, .git/"
