@@ -14,12 +14,12 @@ jobs:
     - name: Copy
       uses: easingthemes/ssh-deploy@main
       env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
-          ARGS: "-rltgoDzvO --delete"          
-          REMOTE_HOST: ${{ secrets.HOST }}
-          REMOTE_USER: ${{ secrets.USERNAME }}
-          TARGET: "prod/"
-          EXCLUDE: "data/, node_modules/, logs/, .git/"
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+        ARGS: "-rltgoDzvO --delete"          
+        REMOTE_HOST: ${{ secrets.HOST }}
+        REMOTE_USER: ${{ secrets.USERNAME }}
+        TARGET: "prod/"
+        EXCLUDE: "data/, node_modules/, logs/, .git/"
     
     - name: Configure SSH
       run: |
@@ -33,10 +33,10 @@ jobs:
           IdentityFile ~/.ssh/staging.key
             StrictHostKeyChecking no
           END
-       env:
-         SSH_USER: ${{ secrets.USERNAME }}
-         SSH_KEY: ${{ secrets.SSH_KEY }}
-         SSH_HOST: ${{ secrets.HOST }}
+      env:
+        SSH_USER: ${{ secrets.USERNAME }}
+        SSH_KEY: ${{ secrets.SSH_KEY }}
+        SSH_HOST: ${{ secrets.HOST }}
 
     - name: Install and build
       run: ssh staging 'cd prod ; yarn install ; yarn build'
