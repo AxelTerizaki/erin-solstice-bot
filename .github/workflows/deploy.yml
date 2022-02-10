@@ -20,7 +20,7 @@ jobs:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         ARGS: "-rltgoDzvO --delete"          
         TARGET: "prod/"
-        EXCLUDE: "data/, node_modules/, logs/, .git/"
+        EXCLUDE: "dist/, data/, node_modules/, logs/, .git/"
     
     - name: Configure SSH
       run: |
