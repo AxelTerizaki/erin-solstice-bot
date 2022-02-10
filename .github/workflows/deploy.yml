@@ -10,15 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
-    - name: Debug
-      run: env
-      env: 
-        FOOBAR2: ${{ secrets.FOOBAR }}
     - name: Checkout 
       uses: actions/checkout@v2 # Required to mount the Github Workspace to a volume 
     - name: Copy
       uses: easingthemes/ssh-deploy@main
       env:
+        REMOTE_USER: ${{ secrets.REMOTE_USER }}
+        REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
         ARGS: "-rltgoDzvO --delete"          
         TARGET: "prod/"
         EXCLUDE: "data/, node_modules/, logs/, .git/"
@@ -34,7 +32,11 @@ jobs:
           User $REMOTE_USER
           IdentityFile ~/.ssh/staging.key
             StrictHostKeyChecking no
-          END        
+          END
+      env: 
+        REMOTE_USER: ${{ secrets.REMOTE_USER }}
+        REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
     - name: Install and build
       run: ssh staging 'cd prod ; yarn install ; yarn build'
     - name: Restart
