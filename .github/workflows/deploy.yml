@@ -3,25 +3,42 @@ on:
   push:
     branches:
       - master
+      - test
 
 jobs:  
   deploy:
     runs-on: ubuntu-latest
-    container: takkatakka/lftp
     steps:
     - name: Checkout 
       uses: actions/checkout@v2 # Required to mount the Github Workspace to a volume 
-    - name: Create SSH key
+    - name: Copy
+      uses: easingthemes/ssh-deploy@main
+      env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+          ARGS: "-rltgoDzvO --delete"          
+          REMOTE_HOST: ${{ secrets.HOST }}
+          REMOTE_USER: ${{ secrets.USERNAME }}
+          TARGET: "prod/"
+          EXCLUDE: "data/, node_modules/, logs/, .git/"
+    
+    - name: Configure SSH
       run: |
         mkdir -p ~/.ssh/
-        echo "${{ secrets.SSH_KEY }}" > ../private.key
-        ssh-keyscan -H '${{ secrets.HOST }}'
-        chmod -R 700 ~/.ssh
-        '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-      shell: bash   
-    - name: Deploy
-      run: |
-        lftp -c "set ftp:ssl-allow no; open -u ${{ secrets.USERNAME }},${{ secrets.PASSWORD }}, ${{ secrets.HOST }}; cd prod; mirror -Rnev --parallel=10 --exclude .env --exclude .git/ --exclude data/ --exclude logs/ --exclude node_modules/ "
-        ssh -l ${{ secrets.USERNAME }} ${{ secrets.HOST }} 'cd prod ; yarn install ; yarn build'
-        ssh -l ${{ secrets.USERNAME }} ${{ secrets.HOST }} 'sudo systemctl restart erin'
-      shell: bash
+        echo "$SSH_KEY" > ~/.ssh/staging.key
+        chmod 600 ~/.ssh/staging.key
+        cat >>~/.ssh/config <<END
+          Host staging
+          HostName $SSH_HOST
+          User $SSH_USER
+          IdentityFile ~/.ssh/staging.key
+            StrictHostKeyChecking no
+          END
+       env:
+         SSH_USER: ${{ secrets.USERNAME }}
+         SSH_KEY: ${{ secrets.SSH_KEY }}
+         SSH_HOST: ${{ secrets.HOST }}
+
+    - name: Install and build
+      run: ssh staging 'cd prod ; yarn install ; yarn build'
+    - name: Restart
+      run: ssh staging 'sudo systemctl restart erin'
