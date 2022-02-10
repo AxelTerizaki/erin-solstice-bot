@@ -10,15 +10,16 @@ jobs:
     - name: Checkout 
       uses: actions/checkout@v2 # Required to mount the Github Workspace to a volume 
     - name: Create SSH key
-        run: |
-          mkdir -p ~/.ssh/
-          echo "${{ secrets.SSH_KEY }}" > ../private.key
-          ssh-keyscan -H '${{ secrets.HOST }}'
-          chmod -R 700 ~/.ssh
-          '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-        shell: bash   
+      run: |
+        mkdir -p ~/.ssh/
+        echo "${{ secrets.SSH_KEY }}" > ../private.key
+        ssh-keyscan -H '${{ secrets.HOST }}'
+        chmod -R 700 ~/.ssh
+        '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+      shell: bash   
     - name: Deploy
-        run: |
-          lftp -c "set ftp:ssl-allow no; open -u ${{ secrets.USERNAME }},${{ secrets.PASSWORD }}, ${{ secrets.HOST }}; cd prod; mirror -Rnev --parallel=10 --exclude .env --exclude .git/ --exclude data/ --exclude logs/ --exclude node_modules/ "
-          ssh -l ${{ secrets.USERNAME }} ${{ secrets.HOST }} 'cd prod ; yarn install ; yarn build'
-          ssh -l ${{ secrets.USERNAME }} ${{ secrets.HOST }} 'sudo systemctl restart erin'
+      run: |
+        lftp -c "set ftp:ssl-allow no; open -u ${{ secrets.USERNAME }},${{ secrets.PASSWORD }}, ${{ secrets.HOST }}; cd prod; mirror -Rnev --parallel=10 --exclude .env --exclude .git/ --exclude data/ --exclude logs/ --exclude node_modules/ "
+        ssh -l ${{ secrets.USERNAME }} ${{ secrets.HOST }} 'cd prod ; yarn install ; yarn build'
+        ssh -l ${{ secrets.USERNAME }} ${{ secrets.HOST }} 'sudo systemctl restart erin'
+      shell: bash
