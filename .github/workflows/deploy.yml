@@ -15,10 +15,10 @@ jobs:
     - name: Copy
       uses: easingthemes/ssh-deploy@main
       env:
-        SSH_PRIVATE_KEY: ${{ SSH_KEY }}
+        SSH_PRIVATE_KEY: ${{ env.SSH_KEY }}
         ARGS: "-rltgoDzvO --delete"          
-        REMOTE_HOST: ${{ HOST }}
-        REMOTE_USER: ${{ USERNAME }}
+        REMOTE_HOST: ${{ env.HOST }}
+        REMOTE_USER: ${{ env.USERNAME }}
         TARGET: "prod/"
         EXCLUDE: "data/, node_modules/, logs/, .git/"
     
@@ -35,9 +35,9 @@ jobs:
             StrictHostKeyChecking no
           END
       env:
-        SSH_USER: ${{ USERNAME }}
-        SSH_KEY: ${{ SSH_KEY }}
-        SSH_HOST: ${{ HOST }}
+        SSH_USER: ${{ env.USERNAME }}
+        SSH_KEY: ${{ env.SSH_KEY }}
+        SSH_HOST: ${{ env.HOST }}
 
     - name: Install and build
       run: ssh staging 'cd prod ; yarn install ; yarn build'
