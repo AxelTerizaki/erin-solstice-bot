@@ -17,7 +17,7 @@ export async function getGuildLevels(message: Message) {
 		let rank = 1;
 		const desc = [];
 		for (const user of users) {
-			if (rank > 15) break;
+			if (rank > 20) break;
 			if (!user.class) user.class = 'No Class';
 			desc.push(`${rank}. **${user.name}** [${user.class}] Level **${user.level}** (**${user.xp}** XP with **${user.messages}** messages)`);
 			rank++;
