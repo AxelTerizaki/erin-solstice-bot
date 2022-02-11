@@ -1,0 +1,44 @@
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+      - test
+
+jobs:  
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+    - name: Checkout 
+      uses: actions/checkout@v2 # Required to mount the Github Workspace to a volume 
+    - name: Copy
+      uses: easingthemes/ssh-deploy@main
+      env:
+        REMOTE_USER: ${{ secrets.REMOTE_USER }}
+        REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        ARGS: "-rltgoDzvO --delete"          
+        TARGET: "prod/"
+        EXCLUDE: "dist/, data/, node_modules/, logs/, .git/"
+    
+    - name: Configure SSH
+      run: |
+        mkdir -p ~/.ssh/
+        echo "$SSH_PRIVATE_KEY" > ~/.ssh/staging.key
+        chmod 600 ~/.ssh/staging.key
+        cat >>~/.ssh/config <<END
+          Host staging
+          HostName $REMOTE_HOST
+          User $REMOTE_USER
+          IdentityFile ~/.ssh/staging.key
+          StrictHostKeyChecking no
+        END
+      env: 
+        REMOTE_USER: ${{ secrets.REMOTE_USER }}
+        REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+    - name: Install and build
+      run: ssh staging 'cd prod ; yarn install ; yarn build'
+    - name: Restart
+      run: ssh staging 'sudo systemctl restart erin'
