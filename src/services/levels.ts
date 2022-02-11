@@ -82,9 +82,18 @@ export async function initLevels() {
 			}
 		} else {
 			// User has no date, adding it
-			levelsDateMap.set(message.author.id, { lastMessageDate: new Date(), numberOfMessages: 1})
+			levelsDateMap.set(message.author.id, { lastMessageDate: new Date(), numberOfMessages: 1});
 		}
 	});
+	// Reset all levels in case there's a change in level calculation
+	for (const guild of getErin().guilds.cache.values()) {
+		const manager = getLevelManager(guild.id);
+		const users = await manager.getGuildLevels();
+		for (const user of users) {
+			user.level = computeLevel(user.xp);
+			await manager.saveLevel(user);
+		}
+	}
 }
 
 export async function setLevelClass(message: Message, className: string) {
