@@ -41,7 +41,7 @@ export async function getLevel(message: Message) {
 			`**Class :** [${user.class}] Level ${user.level}`,
 			`**XP :** ${user.xp}`,
 			`**Messages :** ${user.messages}`,
-			`**Rank :** ${userIndex}`
+			`**Rank :** ${userIndex + 1}`
 		]);
 		message.channel.send(msg);
 	} catch (e) {
