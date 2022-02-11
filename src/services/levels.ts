@@ -158,5 +158,5 @@ function computeLevel(xp: number): number {
 /** Courtesy of @leonekmi */
 function getXPForLevel(level: number): number {
 	if (level <= 1) return 250;
-	return getXPForLevel(level - 1) + (level * 800);
+	return getXPForLevel(level - 1) + (level * 4000);
 }
