@@ -16,10 +16,9 @@ async function manageReminder(guildID: string) {
 				// Reminder is due. Let's delete it and mention our user
 				const channel = await getErin().channels.cache.get(reminder.channel_id).fetch() as TextChannel;
 				const msg = embed('Reminder!', [`${reminder.content}`]);
-				channel.startTyping();
+				channel.sendTyping();
 				channel.send(`Hey <@${reminder.user_id}>, you've got a reminder!`);
-				channel.send(msg);
-				channel.stopTyping();
+				channel.send(msg.toJSON());
 				manager.deleteReminder(reminder.id);
 			}
 		}
@@ -44,11 +43,11 @@ export async function removeReminder(message: Message, id: number) {
 		const manager = getReminderManager(message.guild.id);
 		const reminder = await manager.getReminder(id);
 		if (reminder.user_id !== message.author.id) {
-			message.channel.send(embed('Reminders', ['Sorry but this reminder isn\'t yours.']));
+			message.channel.send(embed('Reminders', ['Sorry but this reminder isn\'t yours.']).toJSON());
 			return null;
 		}
 		await manager.deleteReminder(id);
-		message.channel.send(embed('Reminders', ['Okay, I\'ll forget about that!']));
+		message.channel.send(embed('Reminders', ['Okay, I\'ll forget about that!']).toJSON());
 		return null;
 	} catch (err) {
 		logger.error('Error while removing a reminder', {obj: err, service: 'Reminder'});
@@ -66,9 +65,9 @@ export async function getReminders(message: Message) {
 				msg.push(`${reminder.id}. \`${reminder.remind_at.toISOString()}\`: ${reminder.content}`);
 			}
 			msg.push('To delete a reminder, use the `forgetreminder <id>` command.');
-			message.channel.send(embed('Your reminders', msg));
+			message.channel.send(embed('Your reminders', msg).toJSON());
 		} else {
-			message.channel.send(embed('Your reminders', ['You have no reminders set!']));
+			message.channel.send(embed('Your reminders', ['You have no reminders set!']).toJSON());
 		}
 	} catch (err) {
 		logger.error('Error while getting reminders', {obj: err, service: 'Reminder'});
@@ -87,7 +86,7 @@ export async function setReminder(message: Message, remind_time: string, content
 			const reminder = remind_time.match(/[a-zA-Z]+|[0-9]+/g);
 			if (+reminder[0] <= 0) {
 				// First parameter isn't a number and isn't a date either
-				message.channel.send(embed('Reminder', ['That is an invalid reminder date!']));
+				message.channel.send(embed('Reminder', ['That is an invalid reminder date!']).toJSON());
 				return null;
 			}
 			date = new Date();
@@ -108,7 +107,7 @@ export async function setReminder(message: Message, remind_time: string, content
 			} else if (unit === 'h') {
 				date.setHours(date.getHours() + +n);
 			} else {
-				message.channel.send(embed('Reminder', ['Unknown time unit!']));
+				message.channel.send(embed('Reminder', ['Unknown time unit!']).toJSON());
 				return null;
 			}
 		}
@@ -122,7 +121,7 @@ export async function setReminder(message: Message, remind_time: string, content
 		message.channel.send(embed('Reminder', [
 			`A new reminder has been set on \`${date.toISOString()}\`:`,
 			content
-		]));
+		]).toJSON());
 	} catch (err) {
 		logger.error('Error while setting a new reminder', {obj: err, service: 'Reminder'});
 		message.reply('Sorry! There was an error while setting your reminder');

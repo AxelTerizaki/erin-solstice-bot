@@ -23,7 +23,7 @@ export async function getGuildLevels(message: Message) {
 			rank++;
 		}
 		const msg = embed(`Rankings for ${getGuild(message.guild.id).name}`, desc);
-		message.channel.send(msg);
+		message.channel.send(msg.toJSON());
 	} catch (err) {
 		logger.error('Error while fetching levels', {obj: err, service: 'Levels'});
 	}
@@ -31,7 +31,7 @@ export async function getGuildLevels(message: Message) {
 }
 
 export async function getLevel(message: Message) {
-	message.channel.startTyping();
+	message.channel.sendTyping();
 	try {
 		const manager = getLevelManager(message.guild.id);
 		const users = await manager.getGuildLevels();
@@ -43,12 +43,10 @@ export async function getLevel(message: Message) {
 			`**Messages :** ${user.messages}`,
 			`**Rank :** ${userIndex}`
 		]);
-		message.channel.send(msg);
+		message.channel.send(msg.toJSON());
 	} catch (e) {
 		message.channel.send('There was some error while fetching level');
 		logger.error('Error while fetching user level', {obj: e, service: 'Levels'});
-	} finally {
-		message.channel.stopTyping();
 	}
 	return null;
 }
@@ -114,7 +112,7 @@ export async function setLevelClass(message: Message, className: string) {
 			data.push(`[${className} Level ${currentUser.level}!]`);
 		}
 		const msg = embed(`${currentUser.name}'s new class!`, data);
-		message.channel.send(msg);
+		message.channel.send(msg.toJSON());
 	} catch (err) {
 		logger.error('Error while setting new class', {obj: err, service: 'Levels'});
 		message.reply('Sorry! There was an error while setting your new class');
