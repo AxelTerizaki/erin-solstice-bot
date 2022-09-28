@@ -1,6 +1,6 @@
-import Daily from '../entities/dailies';
-import DailyUser from '../entities/dailyUsers';
-import User from '../entities/users';
+import Daily from '../types/entities/dailies';
+import DailyUser from '../types/entities/dailyUsers';
+import User from '../types/entities/users';
 import { generateFlatDate } from '../util/date';
 import { getDB } from '../util/db';
 
@@ -60,7 +60,7 @@ export default class DailyManagerService {
     		return repo.save(d);
     	} else {
     		return repo.delete(type);
-    	}    	
+    	}
     }
 
     async getDailyTypes(): Promise<Daily[]> {

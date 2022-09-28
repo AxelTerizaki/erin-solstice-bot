@@ -1,6 +1,6 @@
 import { MoreThan } from 'typeorm';
 
-import Item from '../entities/items';
+import Item from '../types/entities/items';
 import { getDB } from '../util/db';
 
 export const managers = {};
@@ -33,7 +33,7 @@ export default class ShopManagerService {
     			{ id: criteria },
     			{ emote: criteria },
     			{ name: criteria }
-    		] 
+    		]
     		});
     }
 

@@ -1,4 +1,4 @@
-import UserLevel from '../entities/levels';
+import UserLevel from '../types/entities/levels';
 import { getDB } from '../util/db';
 
 export const managers = {};

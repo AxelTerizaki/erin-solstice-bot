@@ -5,8 +5,8 @@ import { getDailyManager } from '../dao/dailies';
 import { getSettingManager } from '../dao/settings';
 import { getShopManager } from '../dao/store';
 import { getCurrentUser,getUserManager } from '../dao/users';
-import Daily from '../entities/dailies';
-import User from '../entities/users';
+import Daily from '../types/entities/dailies';
+import User from '../types/entities/users';
 import { date, generateFlatDate, time } from '../util/date';
 import { embed } from '../util/discord';
 import logger from '../util/logger';
@@ -53,8 +53,8 @@ export async function getRestricted(message: Message) {
 
 /**
  * Check if that message was sent from an allowed place (meaning either gamerestrict is off or channel is fine)
- * @param message 
- * @returns 
+ * @param message
+ * @returns
  */
 export async function isAllowed(message: Message): Promise<boolean> {
 	const restricted = await isRestricted(message.guild.id);
@@ -95,7 +95,7 @@ export async function daily(message: Message, type: string) {
 					if (!dailyuser || (currentDate !== date(true, dailyuser.date))) { // should never happen except if some lags or double try occurs
 						await executeDaily(message, daily, user);
 					} else {
-						message.reply(`You already did a daily task today (${dailyuser.daily.type} at ${time(dailyuser.date)})`); 
+						message.reply(`You already did a daily task today (${dailyuser.daily.type} at ${time(dailyuser.date)})`);
 						// @TODO send halp ?
 					}
 				} else {
@@ -179,14 +179,14 @@ export async function headTail(message: Message, bet: number) {
 	} finally {
 		message.channel.stopTyping();
 	}
-	
+
 	return null;
 }
 
 /**
  * Retrieves the channel ID for gamerestrict settting, if any.
- * @param guildId 
- * @returns 
+ * @param guildId
+ * @returns
  */
 async function isRestricted(guildId: string): Promise<string> {
 	return (await getSettingManager(guildId).get(gamerestrictSettingKey))?.value || null;
@@ -225,7 +225,7 @@ async function executeDaily(message: Message, daily: Daily, user: User) {
 		const dmanager = getDailyManager(message.guild.id);
 		const umanager = getUserManager(message.guild.id);
 		// if empty, typeorm returns null, and typeorm denies init on relations
-		const dusers = daily.users ?? []; 
+		const dusers = daily.users ?? [];
 		const multiplier = Math.max(1.00, 2.00 - (dusers.length * daily.regress));
 		const amount = Math.floor(daily.amount * multiplier);
 		await umanager.changeMoney(user.id, amount);
@@ -245,7 +245,7 @@ export async function setupItem(message: Message, name: string, emote: string, p
 		const imanager = getShopManager(message.guild.id);
 		if (price > 0) { // add / modify
 			const itemToUpdate = await imanager.findItemByAny(name);
-			if (itemToUpdate) { 
+			if (itemToUpdate) {
 				// exists ! update
 				await imanager.saveItem(emote, name, price, itemToUpdate.id);
 				message.reply(`Item ${name} updated !`);

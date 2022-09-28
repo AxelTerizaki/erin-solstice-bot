@@ -1,6 +1,6 @@
 import { GuildMember } from 'discord.js';
 
-import Role from '../entities/roles';
+import Role from '../types/entities/roles';
 import { getDB } from '../util/db';
 
 export const managers = {};

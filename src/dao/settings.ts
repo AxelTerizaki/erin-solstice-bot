@@ -1,6 +1,6 @@
 import { DeleteResult } from 'typeorm';
 
-import Setting from '../entities/settings';
+import Setting from '../types/entities/settings';
 import { getDB } from '../util/db';
 
 export const managers = {};

@@ -1,4 +1,4 @@
-import Reminder from '../entities/reminders';
+import Reminder from '../types/entities/reminders';
 import { getDB } from '../util/db';
 
 export const managers = {};
@@ -22,11 +22,11 @@ export default class ReminderManagerService {
     	const repo = db.connection.getRepository(Reminder);
     	await repo.delete(id);
     }
-	
+
     async getReminders(user?: string): Promise<Reminder[]> {
     	const db = await getDB(this.guildId);
     	const repo = db.connection.getRepository(Reminder);
-    	const searchOptions = user 
+    	const searchOptions = user
     		? { where: { user_id: user }}
     		: undefined;
     	const reminders = repo.find(searchOptions);
@@ -35,7 +35,7 @@ export default class ReminderManagerService {
 
     async getReminder(id?: number): Promise<Reminder> {
     	const db = await getDB(this.guildId);
-    	const repo = db.connection.getRepository(Reminder);    	
+    	const repo = db.connection.getRepository(Reminder);
     	const reminders = repo.findOne(id);
     	return reminders;
     }
