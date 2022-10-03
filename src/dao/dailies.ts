@@ -1,8 +1,8 @@
-import Daily from '../types/entities/dailies';
-import DailyUser from '../types/entities/dailyUsers';
-import User from '../types/entities/users';
-import { generateFlatDate } from '../util/date';
-import { getDB } from '../util/db';
+import {Daily} from '../types/entities/dailies';
+import {DailyUser} from '../types/entities/dailyUsers';
+import {User} from '../types/entities/users';
+import { getDB } from './db';
+import sql from './sql/dailies';
 
 export const managers = {};
 
@@ -18,39 +18,37 @@ export default class DailyManagerService {
 		this.guildId = guildID;
 	}
 
-    guildId: string
+	guildId: string;
 
-    async cleanOldDailies() {
+	async cleanOldDailies() {
     	const db = await getDB(this.guildId);
-    	return db.connection.createQueryBuilder()
-    		.delete()
-    		.from(DailyUser)
-    		.where('date<:fd', { fd: generateFlatDate()})
-    		.execute();
-    }
+    	return db.run(sql.deleteDailyWithDate, {
+			date: new Date()
+		});
+	}
 
-    async getDaily(type: string): Promise<Daily> {
+	async getDaily(type: string): Promise<Daily> {
     	const db = await getDB(this.guildId);
-    	const repo = db.connection.getRepository(Daily);
-    	return repo.findOne(type);
-    }
+    	const res = await db.query(sql.selectDaily, {type});
+		return res[0];
+	}
 
-    async getDailyUser(userid: string): Promise<DailyUser> {
+	async getDailyUser(userid: string): Promise<DailyUser> {
     	const db = await getDB(this.guildId);
     	const repo = db.connection.getRepository(DailyUser);
     	return repo.findOne(userid, { relations: ['daily'] });
-    }
+	}
 
-    async saveDailyUser(daily: Daily, user: User): Promise<DailyUser> {
+	async saveDailyUser(daily: Daily, user: User): Promise<DailyUser> {
     	const db = await getDB(this.guildId);
     	const repo = db.connection.getRepository(DailyUser);
     	const d = new DailyUser();
     	d.daily = daily;
     	d.userid = user.id;
     	return repo.save(d);
-    }
+	}
 
-    async registerDaily(type: string, amount: number): Promise<any> {
+	async registerDaily(type: string, amount: number): Promise<any> {
     	const db = await getDB(this.guildId);
     	const repo = db.connection.getRepository(Daily);
     	if (0 < amount) {
@@ -61,11 +59,11 @@ export default class DailyManagerService {
     	} else {
     		return repo.delete(type);
     	}
-    }
+	}
 
-    async getDailyTypes(): Promise<Daily[]> {
+	async getDailyTypes(): Promise<Daily[]> {
     	const db = await getDB(this.guildId);
     	const repo = db.connection.getRepository(Daily);
     	return repo.find();
-    }
+	}
 }

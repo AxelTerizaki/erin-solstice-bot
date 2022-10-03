@@ -1,6 +1,6 @@
 import {resolve} from 'path';
-import { open } from 'sqlite';
-import sqlite3, { Database } from 'sqlite3';
+import { Database, open } from 'sqlite';
+import sqlite3 from 'sqlite3';
 
 import { DBOptions } from '../types/db';
 import { getState } from '../util/state';
@@ -31,8 +31,7 @@ export default class DB {
 
 	guildID: string;
 	options: DBOptions;
-	db: Database<sqlite3.Database, sqlite3.Statement>;
-	//db: any;
+	db: Database;
 
 	public async init() {
 		this.db = await open({
@@ -42,7 +41,7 @@ export default class DB {
 		if (this.options.logging) sqlite3.verbose();
 		await this.db.migrate({
 			migrationsPath: this.options.migrationsPath
-		})
+		});
 		dbs[`${this.guildID}`] = this;
 
 	}
