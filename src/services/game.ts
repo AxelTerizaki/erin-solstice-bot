@@ -5,8 +5,7 @@ import { getDailyManager } from '../dao/dailies';
 import { getSettingManager } from '../dao/settings';
 import { getShopManager } from '../dao/store';
 import { getCurrentUser,getUserManager } from '../dao/users';
-import Daily from '../types/entities/dailies';
-import User from '../types/entities/users';
+import { Daily } from '../types/entities/dailies';
 import { date, generateFlatDate, time } from '../util/date';
 import { embed } from '../util/discord';
 import logger from '../util/logger';
@@ -93,9 +92,10 @@ export async function daily(message: Message, type: string) {
 					const dailyuser = await manager.getDailyUser(user.id);
 					const currentDate = date(true, generateFlatDate());
 					if (!dailyuser || (currentDate !== date(true, dailyuser.date))) { // should never happen except if some lags or double try occurs
-						await executeDaily(message, daily, user);
+						// @lpu8er : ici on execute un daily mais on en a reçu potentiellement plusieurs, que faire?
+						await executeDaily(message, daily, user.user_id);
 					} else {
-						message.reply(`You already did a daily task today (${dailyuser.daily.type} at ${time(dailyuser.date)})`);
+						message.reply(`You already did a daily task today (${dailyuser.type} at ${time(dailyuser.date)})`);
 						// @TODO send halp ?
 					}
 				} else {
@@ -120,12 +120,12 @@ export async function dailyset(message: Message, type: string, amount: number) {
 		if ('help' !== type) {
 			logger.debug(`Setting daily task ${type} to ${amount}`);
 			const manager = getDailyManager(message.guild.id);
-			const daily = await manager.registerDaily(type, amount);
-			if (daily) {
+			try {
+				await manager.registerDaily(type, amount);
 				message.reply('Daily well set !');
-			} else {
+			} catch (err) {
 				message.reply('Unable to setup Daily !');
-			}
+			}			
 		} else {
 			message.reply('The task `help` cannot be set');
 		}
@@ -219,17 +219,20 @@ async function moneyForGuilds(message: Message, userId: string) {
 	message.channel.send(msg);
 }
 
-async function executeDaily(message: Message, daily: Daily, user: User) {
+async function executeDaily(message: Message, daily: Daily, userid: string) {
 	message.channel.startTyping();
 	try {
 		const dmanager = getDailyManager(message.guild.id);
 		const umanager = getUserManager(message.guild.id);
-		// if empty, typeorm returns null, and typeorm denies init on relations
-		const dusers = daily.users ?? [];
+		const dusers = daily.users ? daily.users.split(',') : [];
 		const multiplier = Math.max(1.00, 2.00 - (dusers.length * daily.regress));
 		const amount = Math.floor(daily.amount * multiplier);
-		await umanager.changeMoney(user.id, amount);
-		await dmanager.saveDailyUser(daily, user);
+		await umanager.changeMoney(userid, amount);
+		await dmanager.saveDailyUser({
+			userid,
+			dailyType: daily.type,
+			date: new Date()
+		});
 		message.reply(`You won ${flat2wimString(amount)} ${(multiplier > 1.00)? '('+Math.floor(100 * multiplier)+'%) ':''}by doing this daily task !`);
 	} catch (e) {
 		message.reply('There was some error while executing dailies');

@@ -1,8 +1,6 @@
-import {Daily} from '../types/entities/dailies';
-import {DailyUser} from '../types/entities/dailyUsers';
-import {User} from '../types/entities/users';
+import {Daily, DailyUser} from '../types/entities/dailies';
 import { getDB } from './db';
-import sql from './sql/dailies';
+import { deleteDaily, deleteDailyWithDate, insertDaily, insertDailyUser, selectDailyType, selectDailyUser } from './sql/dailies';
 
 export const managers = {};
 
@@ -22,48 +20,45 @@ export default class DailyManagerService {
 
 	async cleanOldDailies() {
     	const db = await getDB(this.guildId);
-    	return db.run(sql.deleteDailyWithDate, {
+    	return db.run(deleteDailyWithDate, {
 			date: new Date()
 		});
 	}
 
-	async getDaily(type: string): Promise<Daily> {
+	async getDaily(type: string): Promise<Daily[]> {
     	const db = await getDB(this.guildId);
-    	const res = await db.query(sql.selectDaily, {type});
-		return res[0];
+    	const res = await db.query(selectDailyType(true), {type});
+		return res;
 	}
 
 	async getDailyUser(userid: string): Promise<DailyUser> {
     	const db = await getDB(this.guildId);
-    	const repo = db.connection.getRepository(DailyUser);
-    	return repo.findOne(userid, { relations: ['daily'] });
+    	const res = db.query(selectDailyUser, {userid});
+    	return res[0];
 	}
 
-	async saveDailyUser(daily: Daily, user: User): Promise<DailyUser> {
+	async saveDailyUser(dailyUser: DailyUser) {
     	const db = await getDB(this.guildId);
-    	const repo = db.connection.getRepository(DailyUser);
-    	const d = new DailyUser();
-    	d.daily = daily;
-    	d.userid = user.id;
-    	return repo.save(d);
+		await db.run(insertDailyUser, dailyUser);    	
 	}
 
-	async registerDaily(type: string, amount: number): Promise<any> {
+	async registerDaily(type: string, amount: number) {
     	const db = await getDB(this.guildId);
-    	const repo = db.connection.getRepository(Daily);
     	if (0 < amount) {
-    		const d = new Daily();
-    		d.type = type;
-    		d.amount = amount;
-    		return repo.save(d);
+    		await db.run(insertDaily, {
+				type,
+				amount
+			});
     	} else {
-    		return repo.delete(type);
+    		await db.run(deleteDaily, {
+				type
+			});
     	}
 	}
 
 	async getDailyTypes(): Promise<Daily[]> {
     	const db = await getDB(this.guildId);
-    	const repo = db.connection.getRepository(Daily);
-    	return repo.find();
+    	const res = await db.query(selectDailyType());
+    	return res;
 	}
 }
