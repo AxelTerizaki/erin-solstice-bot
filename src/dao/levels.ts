@@ -1,5 +1,6 @@
-import UserLevel from '../types/entities/levels';
-import { getDB } from '../util/db';
+import { UserLevel } from '../types/entities/levels';
+import { getDB } from './db';
+import { selectUserLevel, upsertUserLevel } from './sql/levels';
 
 export const managers = {};
 
@@ -15,44 +16,22 @@ export default class UserLevelManagerService {
 		this.guildId = guildID;
 	}
 
-    guildId: string
+	guildId: string;
 
-    /**
-     *
-     * @param id
-     * @returns
-     */
-    async getUserLevel(id: string): Promise<UserLevel> {
+	async getUserLevel(id: string): Promise<UserLevel> {
     	const db = await getDB(this.guildId);
-    	const repo = db.connection.getRepository(UserLevel);
-    	const user = repo.findOne(id);
-    	return user;
-    }
+    	const res = await db.query(selectUserLevel(false), { id });
+		return res[0];    	
+	}
 
-    /**
-     *
-     * @returns
-     */
-	 async getGuildLevels(): Promise<UserLevel[]> {
+	async getGuildLevels(): Promise<UserLevel[]> {
     	const db = await getDB(this.guildId);
-    	const repo = db.connection.getRepository(UserLevel);
-    	return repo.find({
-    		order: {
-    			xp: 'DESC'
-    		}
-    	});
-    }
+    	const res = await db.query(selectUserLevel(true));
+    	return res;
+	}
 
-    /**
-     * Save new user level data
-	 * @param UserLevel user level data
-     * @returns
-     */
-    async saveLevel(user: UserLevel) {
+	async saveLevel(user: UserLevel) {
     	const db = await getDB(this.guildId);
-    	const repo = db.connection.getRepository(UserLevel);
-    	let r = new UserLevel();
-    	r = {...r, ...user};
-    	return repo.save(r);
-    }
+    	await db.run(upsertUserLevel, user);
+	}
 }
