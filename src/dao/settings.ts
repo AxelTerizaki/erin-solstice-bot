@@ -1,7 +1,6 @@
-import { DeleteResult } from 'typeorm';
-
-import Setting from '../types/entities/settings';
-import { getDB } from '../util/db';
+import { Setting } from '../types/entities/settings';
+import { getDB } from './db';
+import { deleteSetting, insertSetting, selectSetting } from './sql/settings';
 
 export const managers = {};
 
@@ -17,26 +16,21 @@ export default class SettingManagerService {
 		this.guildId = guildID;
 	}
 
-    guildId: string
+	guildId: string;
 
-    async get(setting: string): Promise<Setting> {
+	async get(setting: string): Promise<Setting> {
     	const db = await getDB(this.guildId);
-    	const repo = db.connection.getRepository(Setting);
-    	return repo.findOne(setting);
-    }
+		const res = await db.query(selectSetting, { setting });
+		return res[0];
+	}
 
-    async set(setting: string, value: string): Promise<Setting> {
+	async set(setting: string, value: string) {
     	const db = await getDB(this.guildId);
-    	const repo = db.connection.getRepository(Setting);
-    	const s = new Setting();
-    	s.setting = setting;
-    	s.value = value;
-    	return repo.save(s);
-    }
+    	await db.run(insertSetting, { setting, value });
+	}
 
-    async del(setting: string): Promise<DeleteResult> {
+	async del(setting: string) {
     	const db = await getDB(this.guildId);
-    	const repo = db.connection.getRepository(Setting);
-    	return repo.delete(setting);
-    }
+    	await db.run(deleteSetting, { setting });
+	}
 }

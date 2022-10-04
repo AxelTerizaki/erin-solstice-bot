@@ -1,7 +1,7 @@
-import { GuildMember } from 'discord.js';
+import { Role } from 'discord.js';
 
-import Role from '../types/entities/roles';
-import { getDB } from '../util/db';
+import { getDB } from './db';
+import { deleteRole, insertRole, selectRoles } from './sql/roles';
 
 export const managers = {};
 
@@ -17,50 +17,31 @@ export default class RoleManagerService {
 		this.guildId = guildID;
 	}
 
-	guildId: string
+	guildId: string;
 
-	async registerAutoAssignable(id: string, name: string, assignable: boolean): Promise<Role> {
+	async registerAutoAssignable(id: string, name: string, assignable: boolean) {
 		const db = await getDB(this.guildId);
-		const repo = db.connection.getRepository(Role);
-		const r = new Role();
-		r.id = id;
-		r.name = name.toLowerCase(); // force lowercase anyway
-		r.assignable = assignable;
-		return repo.save(r);
+		await db.run(insertRole, {
+			id,
+			name: name.toLowerCase(),
+			assignable
+		});		
 	}
 
-	async unregisterAutoAssignable(roleId: string): Promise<any> {
+	async unregisterAutoAssignable(id: string) {
 		const db = await getDB(this.guildId);
-		const repo = db.connection.getRepository(Role);
-		return repo.delete(roleId);
+		await db.run(deleteRole, {id});
 	}
 
 	async getAutoAssignableList(): Promise<Role[]> {
 		const db = await getDB(this.guildId);
-		const repo = db.connection.getRepository(Role);
-		return repo.find({
-			where: {
-				assignable: true
-			}
-		});
+		const res = await db.query(selectRoles());
+		return res;	
 	}
 
 	async getAutoAssignable(roleName: string): Promise<Role> {
 		const db = await getDB(this.guildId);
-		const repo = db.connection.getRepository(Role);
-		return repo.findOne({
-			where: {
-				assignable: true,
-				name: roleName.toLowerCase()
-			}
-		});
-	}
-
-	async addMember(member: GuildMember, roleToGive: Role): Promise<GuildMember> {
-		return member.roles.add(roleToGive.id);
-	}
-
-	async removeMember(member: GuildMember, roleToRemove: Role): Promise<GuildMember> {
-		return member.roles.remove(roleToRemove.id);
-	}
+		const res = await db.query(selectRoles(roleName), { name: roleName.toLowerCase()});
+		return res[0];		
+	}	
 }

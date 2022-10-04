@@ -1,4 +1,4 @@
-import { Message } from 'discord.js';
+import { GuildMember, Message, Role } from 'discord.js';
 
 import { getRoleManager } from '../dao/roles';
 import { embed } from '../util/discord';
@@ -42,7 +42,7 @@ export async function add(message: Message, roleName: string) {
 	const roleToGive = await manager.getAutoAssignable(roleName);
 	if (roleToGive) {
 		try {
-			await manager.addMember(message.member, roleToGive);
+			await addMember(message.member, roleToGive);
 			const msg = embed('Roles', [`You now have the role ${roleName} ! Enjoy it !`]);
 			message.channel.send(msg);
 		} catch (e) {
@@ -64,7 +64,7 @@ export async function remove(message: Message, roleName: string) {
 	const roleToRemove = await manager.getAutoAssignable(roleName);
 	if (roleToRemove) {
 		try {
-			await manager.removeMember(message.member, roleToRemove);
+			await removeMember(message.member, roleToRemove);
 			const msg = embed('Roles', [`You are no longer in ${roleName}! It's okay!`]);
 			message.channel.send(msg);
 		} catch (e) {
@@ -133,4 +133,12 @@ export async function unregister(message: Message, roleName: string) {
 	}
 	message.channel.stopTyping();
 	return null;
+}
+
+async function addMember(member: GuildMember, roleToGive: Role): Promise<GuildMember> {
+	return member.roles.add(roleToGive.id);
+}
+
+async function removeMember(member: GuildMember, roleToRemove: Role): Promise<GuildMember> {
+	return member.roles.remove(roleToRemove.id);
 }
