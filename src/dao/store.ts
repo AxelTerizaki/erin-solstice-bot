@@ -1,7 +1,6 @@
-import { MoreThan } from 'typeorm';
-
-import Item from '../types/entities/items';
-import { getDB } from '../util/db';
+import { Item } from '../types/entities/items';
+import { getDB } from './db';
+import { deleteItem, selectItems, upsertItem } from './sql/store';
 
 export const managers = {};
 
@@ -17,50 +16,38 @@ export default class ShopManagerService {
 		this.guildId = guildID;
 	}
 
-    guildId: string
+	guildId: string;
 
-    async getShop(): Promise<Item[]> {
+	async getShop(): Promise<Item[]> {
     	const db = await getDB(this.guildId);
-    	const repo = db.connection.getRepository(Item);
-    	return repo.find({ price: MoreThan(0) });
-    }
+    	const res = await db.query(selectItems());
+		return res;
+	}
 
-    async findItemByAny(criteria: string): Promise<Item> {
+	async findItemByAny(criteria: string): Promise<Item> {
     	const db = await getDB(this.guildId);
-    	const repo = db.connection.getRepository(Item);
-    	return repo.findOne(
-    		{ where: [
-    			{ id: criteria },
-    			{ emote: criteria },
-    			{ name: criteria }
-    		]
-    		});
-    }
+    	const res = await db.query(selectItems(criteria), {search: criteria});
+		return res[0];
+	}
 
-    async findItem(id: number): Promise<Item> {
+	async findItem(id: number): Promise<Item> {
     	const db = await getDB(this.guildId);
-    	const repo = db.connection.getRepository(Item);
-    	return repo.findOne(id);
-    }
+    	const res = await db.query(selectItems(null, id), { id });
+		return res[0];
+	}
 
-    async saveItem(emote: string, name: string, price: number, id?: number) {
+	async saveItem(emote: string, name: string, price: number, id?: number) {
     	const db = await getDB(this.guildId);
-    	const repo = db.connection.getRepository(Item);
-    	let item: Item = null;
-    	if (id) {
-    	    item = await repo.findOne(id);
-    	} else {
-    		item = new Item();
-    	}
-    	item.emote = emote;
-    	item.name = name;
-    	item.price = Math.floor(Math.max(0, price));
-    	return repo.save(item);
-    }
+		await db.run(upsertItem, {
+			emote,
+			name,
+			id,
+			price: Math.floor(Math.max(0, price))
+		});
+	}
 
-    async removeItem(id: number) {
+	async removeItem(id: number) {
     	const db = await getDB(this.guildId);
-    	const repo = db.connection.getRepository(Item);
-    	return repo.delete(id);
-    }
+    	await db.run(deleteItem, { id });
+	}
 }
