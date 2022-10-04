@@ -1,11 +1,11 @@
 import {resolve} from 'path';
 
 import { connectBot, getErin } from './bot';
+import Database from './dao/db';
 import { initLevels } from './services/levels';
 import { initReminders } from './services/reminders';
 //import Setting from './entities/settings';
 import { readConfig } from './util/config';
-import Database from './util/db';
 import { asyncCheckOrMkdir } from './util/files';
 import logger, { configureLogger } from './util/logger';
 import { getState, setState } from './util/state';

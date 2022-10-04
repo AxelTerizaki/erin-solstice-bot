@@ -93,7 +93,7 @@ export async function daily(message: Message, type: string) {
 					const currentDate = date(true, generateFlatDate());
 					if (!dailyuser || (currentDate !== date(true, dailyuser.date))) { // should never happen except if some lags or double try occurs
 						// @lpu8er : ici on execute un daily mais on en a reçu potentiellement plusieurs, que faire?
-						await executeDaily(message, daily, user.user_id);
+						await executeDaily(message, daily, user.id);
 					} else {
 						message.reply(`You already did a daily task today (${dailyuser.type} at ${time(dailyuser.date)})`);
 						// @TODO send halp ?
@@ -154,7 +154,7 @@ export async function headTail(message: Message, bet: number) {
 		const manager = getUserManager(message.guild.id);
 		const currentUser = await getCurrentUser(message.guild.id, message.member.id);
 		if (bet <= currentUser.money) {
-			manager.changeMoney(message.member.id, bet);
+			manager.updateMoney(message.member.id, bet);
 			const rnd = Math.floor(Math.random() * 10100);
 			let won = 0;
 			let res = 'head';
@@ -194,12 +194,13 @@ async function isRestricted(guildId: string): Promise<string> {
 
 async function moneyForGuild(message: Message, userId: string, guildId: string) {
 	const manager = getUserManager(guildId);
-	let user = await manager.getUser(userId);
+	const user = await manager.getUser(userId);
 	// if no user yet,
 	// let's register one while it's okay,
 	// with default money (which is zero for now, but maybe a setting ?)
 	if (!user) {
-		user = await manager.saveMoney(userId, 0);
+		await manager.updateMoney(userId, 0);
+		user.money = 0;
 	}
 	const msg = embed(`${user.id}'s Merchant's Guild Account`, [formatMoney(user.money)]);
 	message.channel.send(msg);
@@ -227,7 +228,7 @@ async function executeDaily(message: Message, daily: Daily, userid: string) {
 		const dusers = daily.users ? daily.users.split(',') : [];
 		const multiplier = Math.max(1.00, 2.00 - (dusers.length * daily.regress));
 		const amount = Math.floor(daily.amount * multiplier);
-		await umanager.changeMoney(userid, amount);
+		await umanager.updateMoney(userid, amount);
 		await dmanager.saveDailyUser({
 			userid,
 			dailyType: daily.type,
@@ -302,8 +303,8 @@ export async function buyItem(message: Message, userid: string, itemSearch: stri
 			nb = Math.max(1, Math.round(nb));
 			const totalPrice = nb * item.price;
 			if (totalPrice <= currentUser.money) { // first of all, grab money
-				await umanager.changeMoney(currentUser.id, -1 * totalPrice);
-				await umanager.addItem(currentUser.id, item, nb);
+				await umanager.updateMoney(currentUser.id, -1 * totalPrice);
+				await umanager.addItemToInventory(currentUser.id, item.id, nb);
 				message.reply(`You bought ${nb} × ${item.name} !`);
 			} else {
 				message.reply(`You cannot buy this item, as it costs ${flat2wimString(totalPrice)} and you only have ${flat2wimString(currentUser.money)} !`);
@@ -323,7 +324,7 @@ export async function showInventory(message: Message, userid: string) {
 	message.channel.startTyping();
 	try {
 		const umanager = getUserManager(message.guild.id);
-		const items = await umanager.listItems(userid);
+		const items = await umanager.listInventory(userid);
 		if (items) {
 			let r = 'Inventory content : \n';
 			for (const i of items) {
